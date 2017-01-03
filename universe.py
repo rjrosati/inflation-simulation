@@ -11,13 +11,17 @@ clock=pygame.time.Clock()
 maxfps=60
 font = pygame.font.Font(None,30)
 dt=0.05
-dt_per_frame = 10
-c = 1
+dt_per_frame = 1
+c = 100
+num_dt=0
 t=0
 done = False
-paused = False
+paused = True
+light_traveling = False
+WHITE = (255,255,255)
+BLACK = (  0,  0,  0)
 
-H = 1E-3
+H = 1E-2
 # for now, de Sitter expansion
 def a(t):
     return np.exp(H*t)
@@ -32,35 +36,49 @@ def recompute_grid(t,center_x,center_y):
             grid.append(pygame.Rect(a1*(x-center_x)+center_x,a1*(y-center_y)+center_y,a1*blk,a1*blk))
     return grid
 
+def blit_txt_with_outline(screen, loc, font, text, fg_color, bg_color):
+        textfg = font.render(text,True, fg_color)
+        textbg = font.render(text,True, bg_color)
+        screen.blit(textbg,loc+(-1,-1))
+        screen.blit(textbg,loc+( 1,-1))
+        screen.blit(textbg,loc+(-1, 1))
+        screen.blit(textbg,loc+( 1, 1))
+        screen.blit(textfg,loc)
+        return
+
 
 while not done:
-    screen.fill((0,0,0))
+    screen.fill(BLACK)
     if not paused:
-        t+=1
+        num_dt+=1
+        t = num_dt*dt
     
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             done=True
         if event.type == pygame.KEYDOWN and event.key == pygame.K_SPACE:
             paused = not paused
+        if event.type == pygame.KEYDOWN and event.key == pygame.K_c and light_traveling == False:
+            light_traveling = True
+            tc = t
+            td = t+1
 
 
-
-
-    if (t%dt_per_frame==0):
+    if (num_dt%dt_per_frame==0):
         grid = recompute_grid(t,uniWidth/2,uniHeight/2)
         for square in grid:
-            pygame.draw.rect(screen,(255,255,255),square,1)
+            pygame.draw.rect(screen,WHITE,square,1)
+
+        if light_traveling:
+            if (tc <= t <= td):
+                # this radius should be a more complicated function of time
+                r = int(c*(t-tc))
+                pygame.draw.circle(screen,(255,255,0),(int(uniWidth/2),int(uniHeight/2)),r,0 if r<5 else 5 )
+            else:
+                light_traveling = False
+
+        blit_txt_with_outline(screen,(20,20),font,"t = %6.4f"%t,WHITE,BLACK)
+        blit_txt_with_outline(screen,(20,50),font,"a(t) = %3.2f"% a(t),WHITE,BLACK)
 
 
-        #pygame.draw.circle(
-
-        text = font.render("t = %6.4f"%(t*dt), True, (255,255,255))
-        textbk = font.render("t = %6.4f"%(t*dt), True, (0,0,0))
-        screen.blit(textbk,(19,19))
-        screen.blit(textbk,(19,21))
-        screen.blit(textbk,(21,19))
-        screen.blit(textbk,(21,21))
-        screen.blit(text,(20,20))
-        pygame.display.flip()
         clock.tick(maxfps)
