@@ -36,13 +36,13 @@ def recompute_grid(t,center_x,center_y):
             grid.append(pygame.Rect(a1*(x-center_x)+center_x,a1*(y-center_y)+center_y,a1*blk,a1*blk))
     return grid
 
-def blit_txt_with_outline(screen, loc, font, text, fg_color, bg_color):
+def blit_txt_with_outline(screen, loc, font, text, fg_color, bg_color,thk):
         textfg = font.render(text,True, fg_color)
         textbg = font.render(text,True, bg_color)
-        screen.blit(textbg,loc+(-1,-1))
-        screen.blit(textbg,loc+( 1,-1))
-        screen.blit(textbg,loc+(-1, 1))
-        screen.blit(textbg,loc+( 1, 1))
+        screen.blit(textbg,loc+(-thk,-thk))
+        screen.blit(textbg,loc+( thk,-thk))
+        screen.blit(textbg,loc+(-thk, thk))
+        screen.blit(textbg,loc+( thk, thk))
         screen.blit(textfg,loc)
         return
 
@@ -77,8 +77,9 @@ while not done:
             else:
                 light_traveling = False
 
-        blit_txt_with_outline(screen,(20,20),font,"t = %6.4f"%t,WHITE,BLACK)
-        blit_txt_with_outline(screen,(20,50),font,"a(t) = %3.2f"% a(t),WHITE,BLACK)
+        blit_txt_with_outline(screen,(20,20),font,"t = %6.4f"%t,WHITE,BLACK,3)
+        blit_txt_with_outline(screen,(20,50),font,"a(t) = %3.2f"% a(t),WHITE,BLACK,3)
 
 
+        pygame.display.flip() 
         clock.tick(maxfps)
