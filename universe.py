@@ -57,6 +57,7 @@ def blit_txt_with_outline(screen, loc, font, text, fg_color, bg_color,thk):
         screen.blit(textfg,loc)
         return
 
+drawing_plot = True
 t_range=[]
 at_range=[]
 fig = plt.figure(figsize=[4, 2], dpi=100)
@@ -67,8 +68,6 @@ canvas = agg.FigureCanvasAgg(fig)
 renderer = canvas.get_renderer()
 psize = canvas.get_width_height()
 def draw_plot(screen):
-    t_range.append(t)
-    at_range.append(a(t))
     ax.plot(t_range, at_range,'c')
     canvas.draw()
     raw_data = renderer.tostring_rgb()
@@ -84,6 +83,8 @@ while not done:
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             done=True
+        if event.type == pygame.KEYDOWN and event.key == pygame.K_p:
+            drawing_plot = not drawing_plot
         if event.type == pygame.KEYDOWN and event.key == pygame.K_SPACE:
             paused = not paused
         if event.type == pygame.KEYDOWN and event.key == pygame.K_c and light_traveling == False:
@@ -108,7 +109,10 @@ while not done:
         blit_txt_with_outline(screen,(20,20),font,"t = %6.4f"%t,WHITE,BLACK,3)
         blit_txt_with_outline(screen,(20,50),font,"a(t) = %3.2f"% a(t),WHITE,BLACK,3)
 
-        draw_plot(screen)
+        t_range.append(t)
+        at_range.append(a(t))
+        if drawing_plot:
+            draw_plot(screen)
 
         pygame.display.flip() 
         clock.tick(maxfps)
