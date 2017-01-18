@@ -7,10 +7,11 @@ import matplotlib
 matplotlib.use("Agg")
 
 import matplotlib.backends.backend_agg as agg
-
-
-import pylab
 from pygame.locals import *
+import matplotlib.pyplot as plt
+
+from mpltools import style
+style.use('dark_background')
 
 uniWidth = 900
 uniHeight = 900
@@ -34,7 +35,7 @@ BLACK = (  0,  0,  0)
 H = 1E-1
 # for now, de Sitter expansion
 def a(t):
-    return jv(1,H*t)
+    return np.exp(H*t) 
 
 
 blk = 100
@@ -59,6 +60,22 @@ def blit_txt_with_outline(screen, loc, font, text, fg_color, bg_color,thk):
 
 t_range=[]
 at_range=[]
+fig = plt.figure(figsize=[4, 2], dpi=100)
+ax = fig.gca()
+ax.set_xlim([0,100])
+ax.set_ylim([0,5])
+canvas = agg.FigureCanvasAgg(fig)
+renderer = canvas.get_renderer()
+psize = canvas.get_width_height()
+def draw_plot(screen):
+    t_range.append(t)
+    at_range.append(a(t))
+    ax.plot(t_range, at_range)
+    canvas.draw()
+    raw_data = renderer.tostring_rgb()
+    screen.blit(pygame.image.fromstring(raw_data, psize, "RGB"),(uniWidth/2,0))
+    return
+
 while not done:
     screen.fill(BLACK)
     if not paused:
@@ -91,32 +108,8 @@ while not done:
 
         blit_txt_with_outline(screen,(20,20),font,"t = %6.4f"%t,WHITE,BLACK,3)
         blit_txt_with_outline(screen,(20,50),font,"a(t) = %3.2f"% a(t),WHITE,BLACK,3)
-        fig = pylab.figure(figsize=[4, 2], # Inches
-                                   dpi=100,        # 100 dots per inch, so the resulting buffer is 400x400 pixels
-                                                      )
-        ax = fig.gca()
-        ax.set_xlim([0,100])
-        ax.set_ylim([0,5])
-        t_range.append(t)
-        at_range.append(a(t))
-        ax.plot(t_range, at_range)
-        canvas = agg.FigureCanvasAgg(fig)
-        canvas.draw()
-        renderer = canvas.get_renderer()
-        raw_data = renderer.tostring_rgb()
 
-
-
-        #screen = pygame.display.get_surface()
-
-        size = canvas.get_width_height()
-
-        surf = pygame.image.fromstring(raw_data, size, "RGB")
-        screen.blit(surf, (500,0))
-        #pygame.display.flip()
-
-        #while True:
-        #    pass
+        draw_plot(screen)
 
         pygame.display.flip() 
         clock.tick(maxfps)
