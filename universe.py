@@ -1,6 +1,7 @@
 import math
 import pygame
 import numpy as np
+from scipy.special import jv
 
 uniWidth = 900
 uniHeight = 900
@@ -21,10 +22,10 @@ light_traveling = False
 WHITE = (255,255,255)
 BLACK = (  0,  0,  0)
 
-H = 1E-2
+H = 1E-1
 # for now, de Sitter expansion
 def a(t):
-    return np.exp(H*t)
+    return jv(1,H*t)
 
 blk = 100
 def recompute_grid(t,center_x,center_y):
