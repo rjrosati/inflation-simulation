@@ -10,8 +10,7 @@ import matplotlib.backends.backend_agg as agg
 from pygame.locals import *
 import matplotlib.pyplot as plt
 
-from mpltools import style
-style.use('dark_background')
+matplotlib.style.use('dark_background')
 
 uniWidth = 900
 uniHeight = 900
@@ -35,7 +34,7 @@ BLACK = (  0,  0,  0)
 H = 1E-1
 # for now, de Sitter expansion
 def a(t):
-    return np.exp(H*t) 
+    return np.exp(H*t)
 
 
 blk = 100
@@ -63,14 +62,14 @@ at_range=[]
 fig = plt.figure(figsize=[4, 2], dpi=100)
 ax = fig.gca()
 ax.set_xlim([0,100])
-ax.set_ylim([0,5])
+ax.set_ylim([0,50])
 canvas = agg.FigureCanvasAgg(fig)
 renderer = canvas.get_renderer()
 psize = canvas.get_width_height()
 def draw_plot(screen):
     t_range.append(t)
     at_range.append(a(t))
-    ax.plot(t_range, at_range)
+    ax.plot(t_range, at_range,'c')
     canvas.draw()
     raw_data = renderer.tostring_rgb()
     screen.blit(pygame.image.fromstring(raw_data, psize, "RGB"),(uniWidth/2,0))
