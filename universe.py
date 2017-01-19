@@ -23,31 +23,31 @@ maxfps=60
 font = pygame.font.Font(None,30)
 dt=0.01
 dt_per_frame = 1
-c = 5
+c = 10
 num_dt=0
 t=0
 done = False
 paused = True
 light_traveling = False
+godmode=False
 WHITE = (255,255,255)
 GREEN = (  0,255,  0)
 BLACK = (  0,  0,  0)
 
-H = 1E-1
-# for now, de Sitter expansion
+H = 0.5
 def a(t):
     return np.exp(H*t)
 
 
-blk = 20
-def recompute_grid(t,center_x,center_y):
+blk = 90
+def recompute_grid(t,center_x,center_y,q):
     # create a square grid, comoving
     grid = []
-    a1 = a(t)
+    a1 = a(t)/q
     w,h,b = uniWidth,uniHeight,blk
     ws,hs = 0,0
+    #rescale grid when no longer visible
     while a1 > w/b:
-        #rescale grid when no longer visible
         a1 /= w/b
     for x in range(ws,w,b):
         for y in range(hs,h,b):
@@ -96,6 +96,8 @@ while not done:
             drawing_plot = not drawing_plot
         if event.type == pygame.KEYDOWN and event.key == pygame.K_SPACE:
             paused = not paused
+        if event.type == pygame.KEYDOWN and event.key == pygame.K_g:
+            godmode = not godmode
         if event.type == pygame.KEYDOWN and event.key == pygame.K_c:
             light_traveling = True
             tc = t
@@ -116,12 +118,15 @@ while not done:
 
         if (num_dt%dt_per_frame==0):
             screen.fill(BLACK)
-            grid = recompute_grid(t,uniWidth/2,uniHeight/2)
+            if godmode:
+                q = a(t)
+            else: q = 1
+            grid = recompute_grid(t,uniWidth/2,uniHeight/2,q)
             for square in grid:
                 pygame.draw.rect(screen,WHITE,square,1)
 
             if light_traveling:
-                    pygame.draw.circle(screen,(255,255,0),(int(uniWidth/2),int(uniHeight/2)),int(r),0 if r<5 else 5 )
+                    pygame.draw.circle(screen,(255,255,0),(int(uniWidth/2),int(uniHeight/2)),int(r/q),0 if int(r/q)<5 else 5 )
 
             blit_txt_with_outline(screen,(20,20),font,"t = %6.4f"%t,WHITE,BLACK,3)
             blit_txt_with_outline(screen,(20,50),font,"a(t) = %3.2f"% a(t),WHITE,BLACK,3)
