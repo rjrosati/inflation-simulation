@@ -4,14 +4,14 @@ import pygame
 import numpy as np
 from scipy.special import jv
 
-import matplotlib
-matplotlib.use("Agg")
+#import matplotlib
+#matplotlib.use("Agg")
 
-import matplotlib.backends.backend_agg as agg
-from pygame.locals import *
-import matplotlib.pyplot as plt
+#import matplotlib.backends.backend_agg as agg
+#from pygame.locals import *
+#import matplotlib.pyplot as plt
 
-matplotlib.style.use('dark_background')
+#matplotlib.style.use('dark_background')
 
 uniWidth = 900
 uniHeight = 900
@@ -30,20 +30,32 @@ done = False
 paused = True
 light_traveling = False
 godmode=False
+horizons = False
 WHITE = (255,255,255)
+RED   = (255,  0,  0)
 GREEN = (  0,255,  0)
+BLUE  = (  0,  0,255)
+YELLOW= (255,255,  0)
+CYAN  = (  0,255,255)
 BLACK = (  0,  0,  0)
 
-H = 0.5
-def a(t):
+H = 1E-1
+def infla(t):
     return np.exp(H*t)
+def rad(t):
+    return (2*H*t)**0.5
 
+def particle_horizon(t,q):
+    return c/H*(np.exp(H*t)-1)*(1/q)
+def max_causal_horizon(godmode):
+    if godmode:
+        return c/H
+    else: return c/H*a(t)
 
-blk = 90
-def recompute_grid(t,center_x,center_y,q):
+blk = 100
+def recompute_grid(t,center_x,center_y,a1):
     # create a square grid, comoving
     grid = []
-    a1 = a(t)/q
     w,h,b = uniWidth,uniHeight,blk
     ws,hs = 0,0
     #rescale grid when no longer visible
@@ -87,6 +99,10 @@ def draw_plot(screen):
         pygame.draw.lines(screen, GREEN, False, points, 1)
     return
 
+oldq = 0
+godgrid = recompute_grid(t,uniWidth/2,uniHeight/2,1)
+a = lambda t: infla(t)
+inflating = True
 while not done:
     
     for event in pygame.event.get():
@@ -98,11 +114,22 @@ while not done:
             paused = not paused
         if event.type == pygame.KEYDOWN and event.key == pygame.K_g:
             godmode = not godmode
+        if event.type == pygame.KEYDOWN and event.key == pygame.K_h:
+            horizons = not horizons
         if event.type == pygame.KEYDOWN and event.key == pygame.K_c:
             light_traveling = True
             tc = t
             td = t+100
             r=0
+        if event.type == pygame.KEYDOWN and event.key == pygame.K_e and inflating:
+            # let's end inflation, switch a(t) to a different function
+            inflating = False
+            tswitch = t
+            a = lambda t: infla(tswitch) + rad(t-tswitch)
+
+
+
+
 
     if not paused:
         num_dt+=1
@@ -120,19 +147,28 @@ while not done:
             screen.fill(BLACK)
             if godmode:
                 q = a(t)
-            else: q = 1
-            grid = recompute_grid(t,uniWidth/2,uniHeight/2,q)
+                grid = godgrid
+            else:
+                q = 1
+                grid = recompute_grid(t,uniWidth/2,uniHeight/2,a(t))
+
             for square in grid:
                 pygame.draw.rect(screen,WHITE,square,1)
 
+            if horizons:
+                h = max_causal_horizon(godmode) #particle_horizon(t,q)
+                pygame.draw.circle(screen,RED,(int(uniWidth/2),int(uniHeight/2)),int(h),0 if int(h)<5 else 5 )
+
             if light_traveling:
-                    pygame.draw.circle(screen,(255,255,0),(int(uniWidth/2),int(uniHeight/2)),int(r/q),0 if int(r/q)<5 else 5 )
+                    pygame.draw.circle(screen,YELLOW,(int(uniWidth/2),int(uniHeight/2)),int(r/q),0 if int(r/q)<5 else 5 )
+                    pygame.draw.circle(screen,CYAN,(int(uniWidth/2+a(t)/q*blk),int(uniHeight/2)),int(r/q),0 if int(r/q)<5 else 5 )
 
             blit_txt_with_outline(screen,(20,20),font,"t = %6.4f"%t,WHITE,BLACK,3)
             blit_txt_with_outline(screen,(20,50),font,"a(t) = %3.2f"% a(t),WHITE,BLACK,3)
 
             if drawing_plot:
                 draw_plot(screen)
+
 
             pygame.display.flip() 
             clock.tick(maxfps)
