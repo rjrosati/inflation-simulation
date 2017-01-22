@@ -95,6 +95,7 @@ def draw_plot(screen):
     #ax.plot(t_range, at_range,'c')
     #canvas.draw()
     #screen.blit(pygame.image.fromstring(renderer.tostring_rgb(), psize, "RGB"),(uniWidth/2,0))
+    # draw background, axes
     if len(points)>1:
         pygame.draw.lines(screen, GREEN, False, points, 1)
     return
@@ -126,6 +127,16 @@ while not done:
             inflating = False
             tswitch = t
             a = lambda t: infla(tswitch) + rad(t-tswitch)
+        if event.type == pygame.KEYDOWN and event.key == pygame.K_r:
+            #reset to the beginning
+            inflating = True
+            light_traveling = False
+            godmode = False
+            horizons = False
+            num_dt = 0
+            a = lambda t: infla(t)
+            points = []
+
 
 
 
