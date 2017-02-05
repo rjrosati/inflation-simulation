@@ -12,16 +12,15 @@ import random
 #import matplotlib.pyplot as plt
 
 #matplotlib.style.use('dark_background')
-
+fontpath = "./PressStart2P.ttf" 
 uniWidth = 900
 uniHeight = 900
-
 pygame.init()
 screen = pygame.display.set_mode((uniWidth,uniHeight), pygame.FULLSCREEN)
 clock = pygame.time.Clock()
 maxfps=60
-font = pygame.font.Font(None,30)
-bigfont = pygame.font.Font(None,50)
+font = pygame.font.Font(fontpath,20)
+bigfont = pygame.font.Font(fontpath,30)
 dt=0.01
 dt_per_frame = 1
 c = 10
@@ -102,6 +101,7 @@ def draw_plot(screen):
     #canvas.draw()
     #screen.blit(pygame.image.fromstring(renderer.tostring_rgb(), psize, "RGB"),(uniWidth/2,0))
     # draw background, axes
+    pygame.draw.rect(screen, BLACK,(p_loc[0],p_loc[1],p_shape[0],p_shape[1]))
     if len(points)>1:
         pygame.draw.lines(screen, GREEN, False, points, 1)
     return
@@ -220,35 +220,35 @@ while not done:
         screen.blit(text,text_rect)
 
         text = font.render("c    release beams of light",True,WHITE)
-        text_rect = text.get_rect(left=int(uniWidth/4),top=int(uniHeight/4)+50)
+        text_rect = text.get_rect(left=int(uniWidth/10),top=int(uniHeight/4)+50)
         screen.blit(text,text_rect)
         
-        text = font.render("p    toggle displaying the plot of a(t)",True,WHITE)
-        text_rect = text.get_rect(left=int(uniWidth/4),top=int(uniHeight/4)+100)
+        text = font.render("p    display plot of a(t)",True,WHITE)
+        text_rect = text.get_rect(left=int(uniWidth/10),top=int(uniHeight/4)+100)
         screen.blit(text,text_rect)
 
-        text = font.render("h    toggle display of the particle horizon",True,WHITE)
-        text_rect = text.get_rect(left=int(uniWidth/4),top=int(uniHeight/4)+150)
+        text = font.render("h    display of the particle horizon",True,WHITE)
+        text_rect = text.get_rect(left=int(uniWidth/10),top=int(uniHeight/4)+150)
         screen.blit(text,text_rect)
 
-        text = font.render("e    end inflation and switch to radiation domination",True,WHITE)
-        text_rect = text.get_rect(left=int(uniWidth/4),top=int(uniHeight/4)+200)
+        text = font.render("e    end inflation, switch to radiation",True,WHITE)
+        text_rect = text.get_rect(left=int(uniWidth/10),top=int(uniHeight/4)+200)
         screen.blit(text,text_rect)
 
-        text = font.render("g    toggle GODMODE, become omnipotent",True,WHITE)
-        text_rect = text.get_rect(left=int(uniWidth/4),top=int(uniHeight/4)+250)
+        text = font.render("g    GODMODE, become omnipotent",True,WHITE)
+        text_rect = text.get_rect(left=int(uniWidth/10),top=int(uniHeight/4)+250)
         screen.blit(text,text_rect)
 
         text = font.render("r    reset simulation",True,WHITE)
-        text_rect = text.get_rect(left=int(uniWidth/4),top=int(uniHeight/4)+300)
+        text_rect = text.get_rect(left=int(uniWidth/10),top=int(uniHeight/4)+300)
         screen.blit(text,text_rect)
 
-        text = font.render("m    toggle SOUND OF THE UNIVERSE",True,WHITE)
-        text_rect = text.get_rect(left=int(uniWidth/4),top=int(uniHeight/4)+350)
+        text = font.render("m    SOUND OF THE UNIVERSE",True,WHITE)
+        text_rect = text.get_rect(left=int(uniWidth/10),top=int(uniHeight/4)+350)
         screen.blit(text,text_rect)
 
         text = font.render("SPACE    START/PAUSE",True,WHITE)
-        text_rect = text.get_rect(left=int(uniWidth/4)-30,top=int(uniHeight/4)+400)
+        text_rect = text.get_rect(left=int(uniWidth/10)-30,top=int(uniHeight/4)+400)
         screen.blit(text,text_rect)
 
 
