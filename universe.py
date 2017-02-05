@@ -17,7 +17,7 @@ uniWidth = 900
 uniHeight = 900
 
 pygame.init()
-screen = pygame.display.set_mode((uniWidth,uniHeight))
+screen = pygame.display.set_mode((uniWidth,uniHeight), pygame.FULLSCREEN)
 clock = pygame.time.Clock()
 maxfps=60
 font = pygame.font.Font(None,30)
@@ -112,7 +112,7 @@ inflating = True
 while not done:
     
     for event in pygame.event.get():
-        if event.type == pygame.QUIT:
+        if event.type == pygame.QUIT or (event.type == pygame.KEYDOWN and event.key == pygame.K_q):
             done=True
         if event.type == pygame.KEYDOWN and event.key == pygame.K_p:
             drawing_plot = not drawing_plot
@@ -201,7 +201,6 @@ while not done:
 
         # show instructions
         screen.fill(BLACK)
-        :
 
         fun_color = random.choice(colors)
         text = bigfont.render("INFLATION SIMULATOR 9000",True, fun_color)
