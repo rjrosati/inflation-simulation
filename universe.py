@@ -2,7 +2,7 @@ import math
 import sys
 import pygame
 import numpy as np
-from scipy.special import jv
+import random
 
 #import matplotlib
 #matplotlib.use("Agg")
@@ -32,6 +32,7 @@ paused = True
 light_traveling = False
 godmode=False
 horizons = False
+music = False 
 WHITE = (255,255,255)
 RED   = (255,  0,  0)
 GREEN = (  0,255,  0)
@@ -40,6 +41,8 @@ YELLOW= (255,255,  0)
 CYAN  = (  0,255,255)
 MAGENTA=(255,  0,255)
 BLACK = (  0,  0,  0)
+
+colors = [WHITE,RED,GREEN,BLUE,YELLOW,CYAN,MAGENTA,BLACK]
 
 H = 1E-1
 def infla(t):
@@ -117,6 +120,15 @@ while not done:
             paused = not paused
         if event.type == pygame.KEYDOWN and event.key == pygame.K_g:
             godmode = not godmode
+        if event.type == pygame.KEYDOWN and event.key == pygame.K_m:
+            if not music:
+                pygame.mixer.init()
+                pygame.mixer.music.load('keygen_music.xm')
+                pygame.mixer.music.play()
+                music = True
+            else:
+                pygame.mixer.music.stop()
+                music = False
         if event.type == pygame.KEYDOWN and event.key == pygame.K_h:
             horizons = not horizons
         if event.type == pygame.KEYDOWN and event.key == pygame.K_c:
@@ -186,9 +198,12 @@ while not done:
             pygame.display.flip() 
             clock.tick(maxfps)
     else:
+
         # show instructions
         screen.fill(BLACK)
-        text = bigfont.render("INFLATION SIMULATOR 9000",True, WHITE)
+
+        fun_color = random.choice(colors)
+        text = bigfont.render("INFLATION SIMULATOR 9000",True, fun_color)
         text_rect = text.get_rect(center=(int(uniWidth/2),50))
         screen.blit(text,text_rect)
 
@@ -216,8 +231,12 @@ while not done:
         text_rect = text.get_rect(left=int(uniWidth/4),top=int(uniHeight/4)+300)
         screen.blit(text,text_rect)
 
+        text = font.render("m    toggle SOUND OF THE UNIVERSE",True,WHITE)
+        text_rect = text.get_rect(left=int(uniWidth/4),top=int(uniHeight/4)+350)
+        screen.blit(text,text_rect)
+
         text = font.render("SPACE    START/PAUSE",True,WHITE)
-        text_rect = text.get_rect(left=int(uniWidth/4)-30,top=int(uniHeight/4)+350)
+        text_rect = text.get_rect(left=int(uniWidth/4)-30,top=int(uniHeight/4)+400)
         screen.blit(text,text_rect)
 
 
