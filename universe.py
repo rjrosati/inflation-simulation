@@ -12,16 +12,15 @@ import random
 #import matplotlib.pyplot as plt
 
 #matplotlib.style.use('dark_background')
-
+fontpath = "./PressStart2P.ttf" 
 uniWidth = 900
 uniHeight = 900
-
 pygame.init()
 screen = pygame.display.set_mode((uniWidth,uniHeight), pygame.FULLSCREEN)
 clock = pygame.time.Clock()
 maxfps=60
-font = pygame.font.Font(None,30)
-bigfont = pygame.font.Font(None,50)
+font = pygame.font.Font(fontpath,20)
+bigfont = pygame.font.Font(fontpath,30)
 dt=0.01
 dt_per_frame = 1
 c = 10
