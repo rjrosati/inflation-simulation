@@ -123,7 +123,7 @@ while not done:
         if event.type == pygame.KEYDOWN and event.key == pygame.K_m:
             if not music:
                 pygame.mixer.init()
-                pygame.mixer.music.load('keygen_music.xm')
+                pygame.mixer.music.load('keygen_music.mp3')
                 pygame.mixer.music.play()
                 music = True
             else:
@@ -201,6 +201,7 @@ while not done:
 
         # show instructions
         screen.fill(BLACK)
+        :
 
         fun_color = random.choice(colors)
         text = bigfont.render("INFLATION SIMULATOR 9000",True, fun_color)
