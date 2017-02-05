@@ -27,6 +27,7 @@ dt_per_frame = 1
 c = 10
 num_dt=0
 t=0
+pausex = 0
 done = False
 paused = True
 light_traveling = False
@@ -118,6 +119,7 @@ while not done:
             drawing_plot = not drawing_plot
         if event.type == pygame.KEYDOWN and event.key == pygame.K_SPACE:
             paused = not paused
+            pauset=0
         if event.type == pygame.KEYDOWN and event.key == pygame.K_g:
             godmode = not godmode
         if event.type == pygame.KEYDOWN and event.key == pygame.K_m:
@@ -201,8 +203,18 @@ while not done:
 
         # show instructions
         screen.fill(BLACK)
-
         fun_color = random.choice(colors)
+        wletters = "TEAM GODZILLA"
+        i=0
+        for letter in wletters:
+            y = 100+30*np.sin(2*np.pi/(uniWidth/2)*(pausex+i*30))
+            x = pausex+i*30
+            x %= uniWidth
+            i += 1
+            text = bigfont.render(letter,True,fun_color)
+            screen.blit(text,(x,y))
+
+
         text = bigfont.render("INFLATION SIMULATOR 9000",True, fun_color)
         text_rect = text.get_rect(center=(int(uniWidth/2),50))
         screen.blit(text,text_rect)
@@ -239,6 +251,8 @@ while not done:
         text_rect = text.get_rect(left=int(uniWidth/4)-30,top=int(uniHeight/4)+400)
         screen.blit(text,text_rect)
 
+
+        pausex += 2 
 
         pygame.display.flip()
         clock.tick(maxfps)
