@@ -21,6 +21,7 @@ screen = pygame.display.set_mode((uniWidth,uniHeight))
 clock = pygame.time.Clock()
 maxfps=60
 font = pygame.font.Font(None,30)
+bigfont = pygame.font.Font(None,50)
 dt=0.01
 dt_per_frame = 1
 c = 10
@@ -37,6 +38,7 @@ GREEN = (  0,255,  0)
 BLUE  = (  0,  0,255)
 YELLOW= (255,255,  0)
 CYAN  = (  0,255,255)
+MAGENTA=(255,  0,255)
 BLACK = (  0,  0,  0)
 
 H = 1E-1
@@ -183,3 +185,41 @@ while not done:
 
             pygame.display.flip() 
             clock.tick(maxfps)
+    else:
+        # show instructions
+        screen.fill(BLACK)
+        text = bigfont.render("INFLATION SIMULATOR 9000",True, WHITE)
+        text_rect = text.get_rect(center=(int(uniWidth/2),50))
+        screen.blit(text,text_rect)
+
+        text = font.render("c    release beams of light",True,WHITE)
+        text_rect = text.get_rect(left=int(uniWidth/4),top=int(uniHeight/4)+50)
+        screen.blit(text,text_rect)
+        
+        text = font.render("p    toggle displaying the plot of a(t)",True,WHITE)
+        text_rect = text.get_rect(left=int(uniWidth/4),top=int(uniHeight/4)+100)
+        screen.blit(text,text_rect)
+
+        text = font.render("h    toggle display of the particle horizon",True,WHITE)
+        text_rect = text.get_rect(left=int(uniWidth/4),top=int(uniHeight/4)+150)
+        screen.blit(text,text_rect)
+
+        text = font.render("e    end inflation and switch to radiation domination",True,WHITE)
+        text_rect = text.get_rect(left=int(uniWidth/4),top=int(uniHeight/4)+200)
+        screen.blit(text,text_rect)
+
+        text = font.render("g    toggle GODMODE, become omnipotent",True,WHITE)
+        text_rect = text.get_rect(left=int(uniWidth/4),top=int(uniHeight/4)+250)
+        screen.blit(text,text_rect)
+
+        text = font.render("r    reset simulation",True,WHITE)
+        text_rect = text.get_rect(left=int(uniWidth/4),top=int(uniHeight/4)+300)
+        screen.blit(text,text_rect)
+
+        text = font.render("SPACE    START/PAUSE",True,WHITE)
+        text_rect = text.get_rect(left=int(uniWidth/4)-30,top=int(uniHeight/4)+350)
+        screen.blit(text,text_rect)
+
+
+        pygame.display.flip()
+        clock.tick(maxfps)
