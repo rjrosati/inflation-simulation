@@ -1,5 +1,5 @@
 # inflation-simulation
-Have you ever wondered "How far away can my screams reach?"? Well, here is the ultimate answer. It doesn't get any less causally connected than this. Here we introduce INFLATION SIMULATOR 9000. Be it that you started screaming at the beggining of the universe, of rather late (during radiation dominated era) we can tell you how far away they will ever reach!
+Have you ever wondered "How far away will my screams reach?"? Well, here is the ultimate answer. It doesn't get any less causally connected than this. Here we introduce INFLATION SIMULATOR 9000. Be it that you started screaming at the beggining of the universe, of rather late (during radiation dominated era) we can tell you how far away they will ever reach!
 
 A little `pygame` animation showing the evolution of the causal horizon during cosmic inflation.
 
@@ -17,8 +17,9 @@ The simulation will begin paused.
 Things to try:
 
 - Causal horizon:
-Switch to GODMODE. Start a light beam. Notice how the light beam will never reach the causal horizon. End inflation. Causal horizon will disappear, why do you think that is?
-- Look at the plot.
+Switch to GODMODE. Start a light beam. Notice how the light beam will never reach the causal horizon. End inflation. Causal horizon will skyrocket, why do you think that is?
+- Look at the plots in the two modes: 
+NOTICE THE INTERSECTIONS: Your screams could hardly be heard during inflation but radiation era brings them back to those distant places!!!
 
 Some warnings:
 We are not solving the full FRW equations here, especially not when switching from inflation to radiation domination.
