@@ -281,40 +281,42 @@ while not done:
         text_rect = text.get_rect(center=(int(uniWidth/2),50))
         screen.blit(text,text_rect)
 
-        text = font.render("CLICK    release light beams",True,WHITE)
-        text_rect = text.get_rect(left=int(uniWidth/10)-30,top=int(uniHeight/4)+50)
-        screen.blit(text,text_rect)
-
-        text = font.render("p    display a(t) plot",True,WHITE)
-        text_rect = text.get_rect(left=int(uniWidth/10),top=int(uniHeight/4)+100)
-        screen.blit(text,text_rect)
-
-        text = font.render("h    display particle horizon",True,WHITE)
-        text_rect = text.get_rect(left=int(uniWidth/10),top=int(uniHeight/4)+150)
-        screen.blit(text,text_rect)
-
-        text = font.render("e    end inflation, switch to radiation",True,WHITE)
-        text_rect = text.get_rect(left=int(uniWidth/10),top=int(uniHeight/4)+200)
-        screen.blit(text,text_rect)
-
-        text = font.render("g    GODMODE, become omnipotent",True,WHITE)
-        text_rect = text.get_rect(left=int(uniWidth/10),top=int(uniHeight/4)+250)
-        screen.blit(text,text_rect)
-
-        text = font.render("r    reset simulation",True,WHITE)
-        text_rect = text.get_rect(left=int(uniWidth/10),top=int(uniHeight/4)+300)
-        screen.blit(text,text_rect)
-
-        text = font.render("m    THE SOUND OF SILENCE",True,WHITE)
-        text_rect = text.get_rect(left=int(uniWidth/10),top=int(uniHeight/4)+350)
-        screen.blit(text,text_rect)
 
         text = font.render("SPACE    START/PAUSE",True,WHITE)
-        text_rect = text.get_rect(left=int(uniWidth/10)-30,top=int(uniHeight/4)+400)
+        text_rect = text.get_rect(left=int(uniWidth/10)-80,top=int(uniHeight/4)+50)
         screen.blit(text,text_rect)
 
         text = font.render("ENTER    speed up time 10x",True,WHITE)
-        text_rect = text.get_rect(left=int(uniWidth/10)-30,top=int(uniHeight/4)+450)
+        text_rect = text.get_rect(left=int(uniWidth/10)-80,top=int(uniHeight/4)+100)
+        screen.blit(text,text_rect)
+
+        text = font.render("CLICK    release light beam",True,WHITE)
+        text_rect = text.get_rect(left=int(uniWidth/10)-80,top=int(uniHeight/4)+150)
+        screen.blit(text,text_rect)
+
+
+        text = font.render("p    display a(t) plot",True,WHITE)
+        text_rect = text.get_rect(left=int(uniWidth/10),top=int(uniHeight/4)+200)
+        screen.blit(text,text_rect)
+
+        text = font.render("h    display event horizon",True,WHITE)
+        text_rect = text.get_rect(left=int(uniWidth/10),top=int(uniHeight/4)+250)
+        screen.blit(text,text_rect)
+
+        text = font.render("e    end inflation, switch to radiation",True,WHITE)
+        text_rect = text.get_rect(left=int(uniWidth/10),top=int(uniHeight/4)+300)
+        screen.blit(text,text_rect)
+
+        text = font.render("g    GODMODE, become omnipotent",True,WHITE)
+        text_rect = text.get_rect(left=int(uniWidth/10),top=int(uniHeight/4)+350)
+        screen.blit(text,text_rect)
+
+        text = font.render("r    reset simulation",True,WHITE)
+        text_rect = text.get_rect(left=int(uniWidth/10),top=int(uniHeight/4)+400)
+        screen.blit(text,text_rect)
+
+        text = font.render("m    THE SOUND OF SILENCE",True,WHITE)
+        text_rect = text.get_rect(left=int(uniWidth/10),top=int(uniHeight/4)+450)
         screen.blit(text,text_rect)
 
         pausex += 2
