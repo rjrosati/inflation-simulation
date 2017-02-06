@@ -105,8 +105,8 @@ def draw_plot(screen):
     if len(points)>1:
 
         pygame.draw.lines(screen, plotcolor, False, points, 3)
-        if ((points[-1][0] > p_loc[0] + p_shape[0]) or (points[-1][1] < p_loc[1] - p_shape[1])):
-            blit_txt_with_outline(screen,(350,600),font,"Inflation went of the charts!!",WHITE,BLACK,3)
+        if ((points[-1][0] > p_loc[0] + p_shape[0]) or (points[-1][1] < p_loc[1])):
+            blit_txt_with_outline(screen,(250,850),font,"INFLATION IS OFF THE CHARTS!!",WHITE,BLACK,3)
 
     return
 
@@ -137,7 +137,7 @@ while not done:
                 if not music:
                     pygame.mixer.init()
                     pygame.mixer.music.load('keygen_music.mp3')
-                    pygame.mixer.music.play(loop=True)
+                    pygame.mixer.music.play(loops=-1)
                     music = True
                 else:
                     pygame.mixer.music.stop()
@@ -233,15 +233,15 @@ while not done:
         text_rect = text.get_rect(center=(int(uniWidth/2),50))
         screen.blit(text,text_rect)
 
-        text = font.render("c    release beams of light",True,WHITE)
+        text = font.render("c    release light beams",True,WHITE)
         text_rect = text.get_rect(left=int(uniWidth/10),top=int(uniHeight/4)+50)
         screen.blit(text,text_rect)
         
-        text = font.render("p    display plot of a(t)",True,WHITE)
+        text = font.render("p    display a(t) plot",True,WHITE)
         text_rect = text.get_rect(left=int(uniWidth/10),top=int(uniHeight/4)+100)
         screen.blit(text,text_rect)
 
-        text = font.render("h    display of the particle horizon",True,WHITE)
+        text = font.render("h    display particle horizon",True,WHITE)
         text_rect = text.get_rect(left=int(uniWidth/10),top=int(uniHeight/4)+150)
         screen.blit(text,text_rect)
 
