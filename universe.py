@@ -37,16 +37,18 @@ BLACK = (  0,  0,  0)
 
 colors = [WHITE,RED,GREEN,BLUE,YELLOW,CYAN,MAGENTA,BLACK]
 
-H = 1E-1
+H0 = 1E-1
 def infla(t):
-    return np.exp(H*t)
+    return np.exp(H0*t)
 def rad(t):
-    return (2*H*t)**0.5
+    return (2*H0*t)**0.5 # (should this be / 2 ?)
+def radH(t):
+    return H0 * a(t)**(-2)
 
 def particle_horizon(tc,t):
     if godmode:
-        return c/H*np.exp(-H*tc)
-    else: return a(t)*c/H*np.exp(-H*tc)
+        return c/H0*np.exp(-H0*tc)
+    else: return a(t)*c/H0*np.exp(-H0*tc)
 def max_causal_horizon(godmode):
     if godmode:
         return c/H
@@ -115,6 +117,7 @@ def draw_plot(screen):
 fast = False
 godgrid = recompute_grid(t,uniWidth/2,uniHeight/2,1)
 a = lambda t: infla(t)
+H = lambda t: H0
 inflating = True
 pygame.mixer.init()
 pygame.mixer.music.load('keygen_music.mp3')
@@ -160,11 +163,12 @@ while not done:
                 inflating = False
                 tswitch = t
                 a = lambda t: infla(tswitch) + rad(t-tswitch)
+                H = lambda t: radH(t)
+                horizons = False
             if event.key == pygame.K_r:
                 #reset to the beginning
                 inflating = True
                 light_traveling = False
-                godmode = False
                 horizons = True 
                 num_dt = 0
                 a = lambda t: infla(t)
@@ -185,7 +189,7 @@ while not done:
         points.append(p_loc + (0,+p_shape[1]) + (t/xlim[1]*p_shape[0], -a(t)/ylim[1]*p_shape[1]))
         if light_traveling:
             if (tc <= t <= td):
-                v = c + H*r
+                v = c + H(t)*r
                 if fast:
                     r+= v*10*dt
                 else:
