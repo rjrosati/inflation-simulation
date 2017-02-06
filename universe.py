@@ -47,7 +47,7 @@ def rad(t):
 def radH(t):
     return H0 * a(t)**(-2)
 
-def event_horizon(tc,t):
+def event_horizon(tc,t,godmode):
     if godmode:
         return c/H0*np.exp(-H0*tc)
     else: return a(t)*c/H0*np.exp(-H0*tc)
@@ -88,6 +88,7 @@ points = []
 ticksize = 10
 axiscolor = CYAN
 plotcolor = GREEN
+dplotcolor = RED
 ylabel = "c.h."
 xlabel = "t"
 def draw_plot(screen):
@@ -108,11 +109,15 @@ def draw_plot(screen):
     screen.blit(text, p_loc + (3*ticksize,2*ticksize))
 
     # curve
-    if len(points)>1:
-
-        pygame.draw.lines(screen, plotcolor, False, points, 3)
-        if ((points[-1][0] > p_loc[0] + p_shape[0]) or (points[-1][1] < p_loc[1])):
+    p = godpoints  if godmode else points
+    d = goddpoints if godmode else dpoints
+    if len(p)>1:
+        pygame.draw.lines(screen, plotcolor, False, p, 3)
+        if ((p[-1][0] > p_loc[0] + p_shape[0]) or (p[-1][1] < p_loc[1])):
             blit_txt_with_outline(screen,(250,850),font,"INFLATION IS OFF THE CHARTS!!",WHITE,BLACK,3)
+
+    if len(d)>1:
+        pygame.draw.lines(screen, dplotcolor, False, d, 3)
 
     return
 
@@ -201,7 +206,12 @@ while not done:
             num_dt+=1
 
         t = num_dt*dt
-        points.append(p_loc + (0,+p_shape[1]) + (t/xlim[1]*p_shape[0], -event_horizon(t,t)/ylim[1]*p_shape[1]))
+        points.append(   p_loc + (0,+p_shape[1]) + (t/xlim[1]*p_shape[0], -event_horizon(t,t,False)/ylim[1]*p_shape[1]))
+        godpoints.append(p_loc + (0,+p_shape[1]) + (t/xlim[1]*p_shape[0], -event_horizon(t,t,True )/ylim[1]*p_shape[1]))
+
+        if lights_traveling:
+            dpoints.append(   p_loc + (0,+p_shape[1]) + (t/xlim[1]*p_shape[0], -dist(t,False)/ylim[1]*p_shape[1]))
+            goddpoints.append(p_loc + (0,+p_shape[1]) + (t/xlim[1]*p_shape[0], -dist(t,True )/ylim[1]*p_shape[1]))
 
         if light_traveling:
             if (tc <= t <= td):
@@ -229,13 +239,13 @@ while not done:
                 pos1_tmp = np.array((uniWidth/2,uniHeight/2)) + (pos1-np.array((uniWidth/2,uniHeight/2)))*a(t)/q
                 pygame.draw.circle(screen,YELLOW,(int(pos1_tmp[0]),int(pos1_tmp[1])),int(r/q),0 if int(r/q)<5 else 5 )
                 if horizons:
-                    h = event_horizon(tc,t)
+                    h = event_horizon(tc,t,godmode)
                     pygame.draw.circle(screen,RED,(int(pos1_tmp[0]),int(pos1_tmp[1])),int(h),0 if int(h)<5 else 5 )
                 if lights_traveling:
                     pos2_tmp = np.array((uniWidth/2,uniHeight/2)) + (pos2-np.array((uniWidth/2,uniHeight/2)))*a(t)/q
                     pygame.draw.circle(screen,BLUE,(int(pos2_tmp[0]),int(pos2_tmp[1])),int(r/q),0 if int(r/q)<5 else 5 )
                     if horizons:
-                        h = event_horizon(tc,t)
+                        h = event_horizon(tc,t,godmode)
                         pygame.draw.circle(screen,RED,(int(pos2_tmp[0]),int(pos2_tmp[1])),int(h),0 if int(h)<5 else 5 )
 
 
