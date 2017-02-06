@@ -46,7 +46,7 @@ def rad(t):
 def radH(t):
     return H0 * a(t)**(-2)
 
-def particle_horizon(tc,t):
+def event_horizon(tc,t):
     if godmode:
         return c/H0*np.exp(-H0*tc)
     else: return a(t)*c/H0*np.exp(-H0*tc)
@@ -81,13 +81,13 @@ def blit_txt_with_outline(screen, loc, font, text, fg_color, bg_color,thk):
 drawing_plot = True
 p_shape  = np.array((400,200),dtype=int)
 p_loc = np.array((uniWidth-(p_shape[0]+50),50),dtype=int)
-xlim = np.array((0,100),dtype=int)
-ylim = np.array((0,50),dtype=int)
+xlim = np.array((0,200),dtype=int)
+ylim = np.array((0,105),dtype=int)
 points = [] 
 ticksize = 10
 axiscolor = CYAN
 plotcolor = GREEN
-ylabel = "a(t)"
+ylabel = "c.h."
 xlabel = "t"
 def draw_plot(screen):
     # draw background
@@ -190,7 +190,8 @@ while not done:
             num_dt+=1
 
         t = num_dt*dt
-        points.append(p_loc + (0,+p_shape[1]) + (t/xlim[1]*p_shape[0], -a(t)/ylim[1]*p_shape[1]))
+        points.append(p_loc + (0,+p_shape[1]) + (t/xlim[1]*p_shape[0], -event_horizon(t,t)/ylim[1]*p_shape[1]))
+
         if light_traveling:
             if (tc <= t <= td):
                 v = c + H(t)*r
@@ -217,7 +218,7 @@ while not done:
                     pos1 = np.array((uniWidth/2,uniHeight/2)) + (pos-np.array((uniWidth/2,uniHeight/2)))*a(t)/q
                     pygame.draw.circle(screen,YELLOW,(int(pos1[0]),int(pos1[1])),int(r/q),0 if int(r/q)<5 else 5 )
                     if horizons:
-                        h = particle_horizon(tc,t)
+                        h = event_horizon(tc,t)
                         pygame.draw.circle(screen,RED,(int(pos1[0]),int(pos1[1])),int(h),0 if int(h)<5 else 5 )
 
 
