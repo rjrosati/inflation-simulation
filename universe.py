@@ -103,7 +103,11 @@ def draw_plot(screen):
 
     # curve
     if len(points)>1:
+
         pygame.draw.lines(screen, plotcolor, False, points, 3)
+        if ((points[-1][0] > p_loc[0] + p_shape[0]) or (points[-1][1] < p_loc[1] - p_shape[1])):
+            blit_txt_with_outline(screen,(350,600),font,"Inflation went of the charts!!",WHITE,BLACK,3)
+
     return
 
 godgrid = recompute_grid(t,uniWidth/2,uniHeight/2,1)
@@ -161,7 +165,6 @@ while not done:
         num_dt+=1
         t = num_dt*dt
         points.append(p_loc + (0,+p_shape[1]) + (t/xlim[1]*p_shape[0], -a(t)/ylim[1]*p_shape[1]))
-
         if light_traveling:
             if (tc <= t <= td):
                 v = c + H*r
