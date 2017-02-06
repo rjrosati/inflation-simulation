@@ -204,10 +204,10 @@ while not done:
         # show instructions
         screen.fill(BLACK)
         fun_color = random.choice(colors)
-        wletters = "TEAM GODZILLA"
+        wletters = "...o0o0o TEAM LHS=RHS o0o0o..."
         i=0
         for letter in wletters:
-            y = 100+30*np.sin(2*np.pi/(uniWidth/2)*(pausex+i*30))
+            y = 120+30*np.sin(2*np.pi/(uniWidth/2)*(pausex+i*30))
             x = pausex+i*30
             x %= uniWidth
             i += 1
