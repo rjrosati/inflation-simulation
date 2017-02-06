@@ -7,6 +7,7 @@ import random
 fontpath = "./PressStart2P.ttf" 
 uniWidth = 900
 uniHeight = 900
+blk = 100
 pygame.init()
 screen = pygame.display.set_mode((uniWidth,uniHeight), pygame.FULLSCREEN)
 clock = pygame.time.Clock()
@@ -49,7 +50,6 @@ def max_causal_horizon(godmode):
         return c/H
     else: return c/H*a(t)
 
-blk = 100
 def recompute_grid(t,center_x,center_y,a1):
     # create a square grid, comoving
     grid = []
@@ -82,6 +82,8 @@ points = []
 ticksize = 10
 axiscolor = CYAN
 plotcolor = GREEN
+ylabel = "a(t)"
+xlabel = "t"
 def draw_plot(screen):
     # draw background
     pygame.draw.rect(screen, BLACK,(p_loc[0],p_loc[1],p_shape[0],p_shape[1]))
@@ -93,12 +95,17 @@ def draw_plot(screen):
     pygame.draw.line(screen, axiscolor,(p_loc[0],p_loc[1]),(p_loc[0],p_loc[1]+p_shape[1]), 3)
     for y in range(p_loc[1],p_shape[1]+p_loc[1],40):
         pygame.draw.line(screen, axiscolor,(p_loc[0],y),(p_loc[0]+ticksize,y))
+    # axis labels
+    text = font.render(xlabel,True,WHITE,BLACK)
+    screen.blit(text, p_loc + p_shape + (-3*ticksize,-3*ticksize))
+    text = font.render(ylabel,True,WHITE,BLACK)
+    screen.blit(text, p_loc + (3*ticksize,2*ticksize))
+
     # curve
     if len(points)>1:
         pygame.draw.lines(screen, plotcolor, False, points, 3)
     return
 
-oldq = 0
 godgrid = recompute_grid(t,uniWidth/2,uniHeight/2,1)
 a = lambda t: infla(t)
 inflating = True
