@@ -14,7 +14,7 @@ clock = pygame.time.Clock()
 maxfps=60
 font = pygame.font.Font(fontpath,20)
 bigfont = pygame.font.Font(fontpath,30)
-dt=0.01
+dt = 0.01
 dt_per_frame = 1
 c = 10
 num_dt=0
@@ -110,51 +110,59 @@ def draw_plot(screen):
 
     return
 
+fast = False
 godgrid = recompute_grid(t,uniWidth/2,uniHeight/2,1)
 a = lambda t: infla(t)
 inflating = True
 while not done:
-    
+    keys = pygame.key.get_pressed()    
+    if keys[pygame.K_RETURN]:
+        fast = True
+    else:
+        fast = False
     for event in pygame.event.get():
-        if event.type == pygame.QUIT or (event.type == pygame.KEYDOWN and event.key == pygame.K_q):
-            done=True
-        if event.type == pygame.KEYDOWN and event.key == pygame.K_p:
-            drawing_plot = not drawing_plot
-        if event.type == pygame.KEYDOWN and event.key == pygame.K_SPACE:
-            paused = not paused
-            pauset=0
-        if event.type == pygame.KEYDOWN and event.key == pygame.K_g:
-            godmode = not godmode
-        if event.type == pygame.KEYDOWN and event.key == pygame.K_m:
-            if not music:
-                pygame.mixer.init()
-                pygame.mixer.music.load('keygen_music.mp3')
-                pygame.mixer.music.play()
-                music = True
-            else:
-                pygame.mixer.music.stop()
-                music = False
-        if event.type == pygame.KEYDOWN and event.key == pygame.K_h:
-            horizons = not horizons
-        if event.type == pygame.KEYDOWN and event.key == pygame.K_c:
-            light_traveling = True
-            tc = t
-            td = t+100
-            r=0
-        if event.type == pygame.KEYDOWN and event.key == pygame.K_e and inflating:
-            # let's end inflation, switch a(t) to a different function
-            inflating = False
-            tswitch = t
-            a = lambda t: infla(tswitch) + rad(t-tswitch)
-        if event.type == pygame.KEYDOWN and event.key == pygame.K_r:
-            #reset to the beginning
-            inflating = True
-            light_traveling = False
-            godmode = False
-            horizons = False
-            num_dt = 0
-            a = lambda t: infla(t)
-            points = []
+        if event.type == pygame.QUIT:
+            done = True
+        if event.type == pygame.KEYDOWN:
+            if event.key == pygame.K_q:
+                done=True
+            if event.key == pygame.K_p:
+                drawing_plot = not drawing_plot
+            if event.key == pygame.K_SPACE:
+                paused = not paused
+                pauset=0
+            if event.key == pygame.K_g:
+                godmode = not godmode
+            if event.type == pygame.KEYDOWN and event.key == pygame.K_m:
+                if not music:
+                    pygame.mixer.init()
+                    pygame.mixer.music.load('keygen_music.mp3')
+                    pygame.mixer.music.play(loop=True)
+                    music = True
+                else:
+                    pygame.mixer.music.stop()
+                    music = False
+            if event.key == pygame.K_h:
+                horizons = not horizons
+            if event.key == pygame.K_c:
+                light_traveling = True
+                tc = t
+                td = t+100
+                r=0
+            if event.key == pygame.K_e and inflating:
+                # let's end inflation, switch a(t) to a different function
+                inflating = False
+                tswitch = t
+                a = lambda t: infla(tswitch) + rad(t-tswitch)
+            if event.key == pygame.K_r:
+                #reset to the beginning
+                inflating = True
+                light_traveling = False
+                godmode = False
+                horizons = False
+                num_dt = 0
+                a = lambda t: infla(t)
+                points = []
 
 
 
@@ -162,7 +170,11 @@ while not done:
 
 
     if not paused:
-        num_dt+=1
+        if fast:
+            num_dt+=10
+        else:
+            num_dt+=1
+
         t = num_dt*dt
         points.append(p_loc + (0,+p_shape[1]) + (t/xlim[1]*p_shape[0], -a(t)/ylim[1]*p_shape[1]))
         if light_traveling:
