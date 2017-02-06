@@ -4,14 +4,6 @@ import pygame
 import numpy as np
 import random
 
-#import matplotlib
-#matplotlib.use("Agg")
-
-#import matplotlib.backends.backend_agg as agg
-#from pygame.locals import *
-#import matplotlib.pyplot as plt
-
-#matplotlib.style.use('dark_background')
 fontpath = "./PressStart2P.ttf" 
 uniWidth = 900
 uniHeight = 900
@@ -82,28 +74,28 @@ def blit_txt_with_outline(screen, loc, font, text, fg_color, bg_color,thk):
         return
 
 drawing_plot = True
-#t_range=[]
-#at_range=[]
-#fig = plt.figure(figsize=[4, 2], dpi=100)
-#ax = fig.gca()
-#ax.set_xlim([0,100])
-#ax.set_ylim([0,50])
-#canvas = agg.FigureCanvasAgg(fig)
-#renderer = canvas.get_renderer()
-#psize = canvas.get_width_height()
-p_loc = np.array((uniWidth/2,0))
-p_shape  = np.array((400,200))
-xlim = np.array((0,100))
-ylim = np.array((0,50))
+p_shape  = np.array((400,200),dtype=int)
+p_loc = np.array((uniWidth-(p_shape[0]+50),50),dtype=int)
+xlim = np.array((0,100),dtype=int)
+ylim = np.array((0,50),dtype=int)
 points = [] 
+ticksize = 10
+axiscolor = CYAN
+plotcolor = GREEN
 def draw_plot(screen):
-    #ax.plot(t_range, at_range,'c')
-    #canvas.draw()
-    #screen.blit(pygame.image.fromstring(renderer.tostring_rgb(), psize, "RGB"),(uniWidth/2,0))
-    # draw background, axes
+    # draw background
     pygame.draw.rect(screen, BLACK,(p_loc[0],p_loc[1],p_shape[0],p_shape[1]))
+    # x axis and ticks
+    pygame.draw.line(screen, axiscolor,(p_loc[0],p_loc[1]+p_shape[1]),(p_loc[0]+p_shape[0],p_loc[1]+p_shape[1]), 3)
+    for x in range(p_loc[0],p_shape[0]+p_loc[0],40):
+        pygame.draw.line(screen, axiscolor,(x,p_loc[1]+p_shape[1]),(x,p_loc[1]+p_shape[1]-ticksize))
+    # y axis and ticks
+    pygame.draw.line(screen, axiscolor,(p_loc[0],p_loc[1]),(p_loc[0],p_loc[1]+p_shape[1]), 3)
+    for y in range(p_loc[1],p_shape[1]+p_loc[1],40):
+        pygame.draw.line(screen, axiscolor,(p_loc[0],y),(p_loc[0]+ticksize,y))
+    # curve
     if len(points)>1:
-        pygame.draw.lines(screen, GREEN, False, points, 1)
+        pygame.draw.lines(screen, plotcolor, False, points, 3)
     return
 
 oldq = 0
