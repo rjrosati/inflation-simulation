@@ -134,6 +134,7 @@ while not done:
             done = True
         if event.type == pygame.MOUSEBUTTONDOWN:
             pos = pygame.mouse.get_pos()
+            pos = (pos-np.array((uniWidth/2,uniHeight/2)))/(a(t)/q)+np.array((uniWidth/2,uniHeight/2))
             light_traveling = True
             tc = t
             td = t+100
@@ -211,10 +212,11 @@ while not done:
                 pygame.draw.rect(screen,WHITE,square,1)
 
             if light_traveling:
-                    pygame.draw.circle(screen,YELLOW,(int(pos[0]),int(pos[1])),int(r/q),0 if int(r/q)<5 else 5 )
+                    pos1 = np.array((uniWidth/2,uniHeight/2)) + (pos-np.array((uniWidth/2,uniHeight/2)))*a(t)/q
+                    pygame.draw.circle(screen,YELLOW,(int(pos1[0]),int(pos1[1])),int(r/q),0 if int(r/q)<5 else 5 )
                     if horizons:
                         h = particle_horizon(tc,t)
-                        pygame.draw.circle(screen,RED,(int(pos[0]),int(pos[1])),int(h),0 if int(h)<5 else 5 )
+                        pygame.draw.circle(screen,RED,(int(pos1[0]),int(pos1[1])),int(h),0 if int(h)<5 else 5 )
 
 
             blit_txt_with_outline(screen,(20,20),font,"t = %6.4f"%t,WHITE,BLACK,3)
@@ -246,7 +248,7 @@ while not done:
         text_rect = text.get_rect(center=(int(uniWidth/2),50))
         screen.blit(text,text_rect)
 
-        text = font.render("click    release light beams",True,WHITE)
+        text = font.render("CLICK    release light beams",True,WHITE)
         text_rect = text.get_rect(left=int(uniWidth/10)-30,top=int(uniHeight/4)+50)
         screen.blit(text,text_rect)
         
@@ -278,6 +280,9 @@ while not done:
         text_rect = text.get_rect(left=int(uniWidth/10)-30,top=int(uniHeight/4)+400)
         screen.blit(text,text_rect)
 
+        text = font.render("ENTER    speed up time 10x",True,WHITE)
+        text_rect = text.get_rect(left=int(uniWidth/10)-30,top=int(uniHeight/4)+450)
+        screen.blit(text,text_rect)
 
         pausex += 2 
 
