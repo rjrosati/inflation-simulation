@@ -130,14 +130,14 @@ while not done:
     else:
         fast = False
     for event in pygame.event.get():
+        if event.type == pygame.QUIT:
+            done = True
         if event.type == pygame.MOUSEBUTTONDOWN:
             pos = pygame.mouse.get_pos()
             light_traveling = True
             tc = t
             td = t+100
             r=0
-        if event.type == pygame.QUIT:
-            done = True
         if event.type == pygame.KEYDOWN:
             if event.key == pygame.K_q:
                 done=True
@@ -246,8 +246,8 @@ while not done:
         text_rect = text.get_rect(center=(int(uniWidth/2),50))
         screen.blit(text,text_rect)
 
-        text = font.render("c    release light beams",True,WHITE)
-        text_rect = text.get_rect(left=int(uniWidth/10),top=int(uniHeight/4)+50)
+        text = font.render("click    release light beams",True,WHITE)
+        text_rect = text.get_rect(left=int(uniWidth/10)-30,top=int(uniHeight/4)+50)
         screen.blit(text,text_rect)
         
         text = font.render("p    display a(t) plot",True,WHITE)
