@@ -86,6 +86,8 @@ xlim = np.array((0,200),dtype=int)
 ylim = np.array((0,105),dtype=int)
 points = []
 dpoints = []
+godpoints = []
+goddpoints = []
 ticksize = 10
 axiscolor = CYAN
 plotcolor = GREEN
@@ -133,10 +135,7 @@ pygame.mixer.music.play(loops=-1)
 music = True
 while not done:
     keys = pygame.key.get_pressed()
-    if keys[pygame.K_RETURN]:
-        fast = True
-    else:
-        fast = False
+    fast = keys[pygame.K_RETURN]
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             done = True
@@ -145,7 +144,7 @@ while not done:
                 pos2 = pygame.mouse.get_pos()
                 pos2 = (pos2-np.array((uniWidth/2,uniHeight/2)))/(a(t)/q)+np.array((uniWidth/2,uniHeight/2))
                 lights_traveling = True
-                distance = np.linalg.norm((pos1 - pos2)*a(t)/q)
+                distance = np.linalg.norm((pos1 - pos2))
                 tc = t
                 td = t+100
                 r=0
@@ -195,6 +194,9 @@ while not done:
                 a = lambda t: infla(t)
                 H = lambda t: H0
                 points = []
+                godpoints = []
+                goddpoints= []
+                dpoints = []
 
 
 
@@ -212,8 +214,8 @@ while not done:
         godpoints.append(p_loc + (0,+p_shape[1]) + (t/xlim[1]*p_shape[0], -event_horizon(t,t,True )/ylim[1]*p_shape[1]))
 
         if lights_traveling:
-            dpoints.append(   p_loc + (0,+p_shape[1]) + (t/xlim[1]*p_shape[0], -dist(t,False)/ylim[1]*p_shape[1]))
-            goddpoints.append(p_loc + (0,+p_shape[1]) + (t/xlim[1]*p_shape[0], -dist(t,True )/ylim[1]*p_shape[1]))
+            dpoints.append(   p_loc + (0,+p_shape[1]) + (t/xlim[1]*p_shape[0], -distance*a(t)/ylim[1]*p_shape[1]))
+            goddpoints.append(p_loc + (0,+p_shape[1]) + (t/xlim[1]*p_shape[0], -distance/ylim[1]*p_shape[1]))
 
         if light_traveling:
             if (tc <= t <= td):
