@@ -1,10 +1,24 @@
 # inflation-simulation
 Have you ever wondered "How far away will my screams reach?"? Well, here is the ultimate answer. It doesn't get any less causally connected than this. Here we introduce INFLATION SIMULATOR 9000. Be it that you started screaming at the beggining of the universe, of rather late (during radiation dominated era) we can tell you how far away they will ever reach!
 
+# Download
+To download this script, click on the green "clone or download" button right above the list of files. If you have `git` installed, you can clone the repository, or you can download the current version as a zip file.
+
 # Installation
 This script uses the `Python` libraries `numpy` and `pygame`. If you have `Python` installed, but without these libraries, the easiest way to get them is through `pip`. See https://packaging.python.org/installing/#use-pip-for-installing .
 
 If you don't have `Python` installed, we recommend you install the Anaconda distribution, which comes prepackaged with these libraries. https://www.continuum.io/downloads
+
+# Running the script
+On Mac or Linux, open a terminal in the script's folder and type 
+```bash
+$> python ./universe.py
+```
+
+On Windows, hold down <kbd>Shift</kbd> and right-click in the script's folder. Choose "Open Command Window Here". Type:
+```python
+python universe.py
+```
 
 # Controls
 The simulation will begin paused.
