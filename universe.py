@@ -127,6 +127,12 @@ while not done:
     else:
         fast = False
     for event in pygame.event.get():
+        if event.type == pygame.MOUSEBUTTONDOWN:
+            pos = pygame.mouse.get_pos()
+            light_traveling = True
+            tc = t
+            td = t+100
+            r=0
         if event.type == pygame.QUIT:
             done = True
         if event.type == pygame.KEYDOWN:
@@ -150,11 +156,6 @@ while not done:
                     music = False
             if event.key == pygame.K_h:
                 horizons = not horizons
-            if event.key == pygame.K_c:
-                light_traveling = True
-                tc = t
-                td = t+100
-                r=0
             if event.key == pygame.K_e and inflating:
                 # let's end inflation, switch a(t) to a different function
                 inflating = False
@@ -206,11 +207,10 @@ while not done:
                 pygame.draw.rect(screen,WHITE,square,1)
 
             if light_traveling:
-                    pygame.draw.circle(screen,YELLOW,(int(uniWidth/2),int(uniHeight/2)),int(r/q),0 if int(r/q)<5 else 5 )
-                    pygame.draw.circle(screen,CYAN,(int(uniWidth/2+a(t)/q*blk),int(uniHeight/2)),int(r/q),0 if int(r/q)<5 else 5 )
+                    pygame.draw.circle(screen,YELLOW,(int(pos[0]),int(pos[1])),int(r/q),0 if int(r/q)<5 else 5 )
                     if horizons:
                         h = particle_horizon(tc,t)
-                        pygame.draw.circle(screen,RED,(int(uniWidth/2),int(uniHeight/2)),int(h),0 if int(h)<5 else 5 )
+                        pygame.draw.circle(screen,RED,(int(pos[0]),int(pos[1])),int(h),0 if int(h)<5 else 5 )
 
 
             blit_txt_with_outline(screen,(20,20),font,"t = %6.4f"%t,WHITE,BLACK,3)
