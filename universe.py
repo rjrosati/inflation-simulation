@@ -196,6 +196,7 @@ while not done:
                 num_dt = 0
                 a = lambda t: infla(t)
                 H = lambda t: H0
+                e = lambda tc,t,godmode: event_horizon(tc,t,godmode)
                 points = []
                 godpoints = []
                 goddpoints= []
