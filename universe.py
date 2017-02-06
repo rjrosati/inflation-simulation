@@ -16,15 +16,15 @@ font = pygame.font.Font(fontpath,20)
 bigfont = pygame.font.Font(fontpath,30)
 dt = 0.01
 dt_per_frame = 1
-c = 10
+c=10
 num_dt=0
 t=0
-pausex = 0
-done = False
-paused = True
-light_traveling = False
+pausex=0
+done=False
+paused=True
+light_traveling=False
 godmode=False
-horizons = False
+horizons=True
 music = False 
 WHITE = (255,255,255)
 RED   = (255,  0,  0)
@@ -43,8 +43,10 @@ def infla(t):
 def rad(t):
     return (2*H*t)**0.5
 
-def particle_horizon(t,q):
-    return c/H*(np.exp(H*t)-1)*(1/q)
+def particle_horizon(tc,t):
+    if godmode:
+        return c/H*np.exp(-H*tc)
+    else: return a(t)*c/H*np.exp(-H*tc)
 def max_causal_horizon(godmode):
     if godmode:
         return c/H
@@ -155,7 +157,7 @@ while not done:
                 inflating = True
                 light_traveling = False
                 godmode = False
-                horizons = False
+                horizons = True 
                 num_dt = 0
                 a = lambda t: infla(t)
                 points = []
@@ -177,7 +179,10 @@ while not done:
         if light_traveling:
             if (tc <= t <= td):
                 v = c + H*r
-                r += v*dt
+                if fast:
+                    r+= v*10*dt
+                else:
+                    r += v*dt
             else:
                 light_traveling = False
 
@@ -193,13 +198,13 @@ while not done:
             for square in grid:
                 pygame.draw.rect(screen,WHITE,square,1)
 
-            if horizons:
-                h = max_causal_horizon(godmode) #particle_horizon(t,q)
-                pygame.draw.circle(screen,RED,(int(uniWidth/2),int(uniHeight/2)),int(h),0 if int(h)<5 else 5 )
-
             if light_traveling:
                     pygame.draw.circle(screen,YELLOW,(int(uniWidth/2),int(uniHeight/2)),int(r/q),0 if int(r/q)<5 else 5 )
                     pygame.draw.circle(screen,CYAN,(int(uniWidth/2+a(t)/q*blk),int(uniHeight/2)),int(r/q),0 if int(r/q)<5 else 5 )
+                    if horizons:
+                        h = particle_horizon(tc,t)
+                        pygame.draw.circle(screen,RED,(int(uniWidth/2),int(uniHeight/2)),int(h),0 if int(h)<5 else 5 )
+
 
             blit_txt_with_outline(screen,(20,20),font,"t = %6.4f"%t,WHITE,BLACK,3)
             blit_txt_with_outline(screen,(20,50),font,"a(t) = %3.2f"% a(t),WHITE,BLACK,3)
