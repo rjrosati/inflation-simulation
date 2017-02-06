@@ -116,6 +116,10 @@ fast = False
 godgrid = recompute_grid(t,uniWidth/2,uniHeight/2,1)
 a = lambda t: infla(t)
 inflating = True
+pygame.mixer.init()
+pygame.mixer.music.load('keygen_music.mp3')
+pygame.mixer.music.play(loops=-1)
+music = True
 while not done:
     keys = pygame.key.get_pressed()    
     if keys[pygame.K_RETURN]:
@@ -262,7 +266,7 @@ while not done:
         text_rect = text.get_rect(left=int(uniWidth/10),top=int(uniHeight/4)+300)
         screen.blit(text,text_rect)
 
-        text = font.render("m    SOUND OF THE UNIVERSE",True,WHITE)
+        text = font.render("m    THE SOUND OF SILENCE",True,WHITE)
         text_rect = text.get_rect(left=int(uniWidth/10),top=int(uniHeight/4)+350)
         screen.blit(text,text_rect)
 
