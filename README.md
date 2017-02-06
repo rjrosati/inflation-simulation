@@ -6,7 +6,7 @@ A little `pygame` animation showing the evolution of the causal horizon during c
 The simulation will begin paused.
 + <kbd>SPACE</kbd> starts/pauses the simulation.
 + <kbd>ENTER</kbd> speeds up time by a factor of 10 while held down
-+ <kbd class="mouse">Left</kbd> release a shell of light where you click.
++ <kbd class="mouse">Left click</kbd> release a shell of light where you click.
 + <kbd>p</kbd> toggles the plot of a(t) 
 + <kbd>h</kbd> toggles the display of the causal horizon (i.e. the max comoving distance the current light ray could travel in infinite time) 
 + <kbd>e</kbd> ends inflation and switches to radiation domination
