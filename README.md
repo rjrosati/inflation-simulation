@@ -16,8 +16,8 @@ $> python ./universe.py
 ```
 
 On Windows, hold down <kbd>Shift</kbd> and right-click in the script's folder. Choose "Open Command Window Here". Type:
-```python
-python universe.py
+```cmd
+C:\Users\...\inflation-simulation> python universe.py
 ```
 
 # Controls
