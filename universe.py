@@ -22,8 +22,9 @@ t=0
 pausex=0
 done=False
 paused=True
-light_traveling=False
 godmode=False
+light_traveling=False
+lights_traveling=False
 horizons=True
 music = False 
 WHITE = (255,255,255)
@@ -133,13 +134,22 @@ while not done:
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             done = True
-        if event.type == pygame.MOUSEBUTTONDOWN:
-            pos = pygame.mouse.get_pos()
-            pos = (pos-np.array((uniWidth/2,uniHeight/2)))/(a(t)/q)+np.array((uniWidth/2,uniHeight/2))
-            light_traveling = True
-            tc = t
-            td = t+100
-            r=0
+        if light_traveling:
+            if event.type == pygame.MOUSEBUTTONDOWN:
+                pos2 = pygame.mouse.get_pos()
+                pos2 = (pos2-np.array((uniWidth/2,uniHeight/2)))/(a(t)/q)+np.array((uniWidth/2,uniHeight/2))
+                lights_traveling = True
+                tc = t
+                td = t+100
+                r=0
+        else:
+            if event.type == pygame.MOUSEBUTTONDOWN:
+                pos1 = pygame.mouse.get_pos()
+                pos1 = (pos1-np.array((uniWidth/2,uniHeight/2)))/(a(t)/q)+np.array((uniWidth/2,uniHeight/2))
+                light_traveling = True
+                tc = t
+                td = t+100
+                r=0
         if event.type == pygame.KEYDOWN:
             if event.key == pygame.K_q:
                 done=True
@@ -172,6 +182,7 @@ while not done:
                 #reset to the beginning
                 inflating = True
                 light_traveling = False
+                lights_traveling = False
                 horizons = True 
                 num_dt = 0
                 a = lambda t: infla(t)
@@ -215,11 +226,17 @@ while not done:
                 pygame.draw.rect(screen,WHITE,square,1)
 
             if light_traveling:
-                    pos1 = np.array((uniWidth/2,uniHeight/2)) + (pos-np.array((uniWidth/2,uniHeight/2)))*a(t)/q
-                    pygame.draw.circle(screen,YELLOW,(int(pos1[0]),int(pos1[1])),int(r/q),0 if int(r/q)<5 else 5 )
+                pos1_tmp = np.array((uniWidth/2,uniHeight/2)) + (pos1-np.array((uniWidth/2,uniHeight/2)))*a(t)/q
+                pygame.draw.circle(screen,YELLOW,(int(pos1_tmp[0]),int(pos1_tmp[1])),int(r/q),0 if int(r/q)<5 else 5 )
+                if horizons:
+                    h = event_horizon(tc,t)
+                    pygame.draw.circle(screen,RED,(int(pos1_tmp[0]),int(pos1_tmp[1])),int(h),0 if int(h)<5 else 5 )
+                if lights_traveling:
+                    pos2_tmp = np.array((uniWidth/2,uniHeight/2)) + (pos2-np.array((uniWidth/2,uniHeight/2)))*a(t)/q
+                    pygame.draw.circle(screen,BLUE,(int(pos2_tmp[0]),int(pos2_tmp[1])),int(r/q),0 if int(r/q)<5 else 5 )
                     if horizons:
                         h = event_horizon(tc,t)
-                        pygame.draw.circle(screen,RED,(int(pos1[0]),int(pos1[1])),int(h),0 if int(h)<5 else 5 )
+                        pygame.draw.circle(screen,RED,(int(pos2_tmp[0]),int(pos2_tmp[1])),int(h),0 if int(h)<5 else 5 )
 
 
             blit_txt_with_outline(screen,(20,20),font,"t = %6.4f"%t,WHITE,BLACK,3)
