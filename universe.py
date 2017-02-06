@@ -133,10 +133,7 @@ pygame.mixer.music.play(loops=-1)
 music = True
 while not done:
     keys = pygame.key.get_pressed()
-    if keys[pygame.K_RETURN]:
-        fast = True
-    else:
-        fast = False
+    fast = keys[pygame.K_RETURN]
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             done = True
@@ -195,6 +192,9 @@ while not done:
                 a = lambda t: infla(t)
                 H = lambda t: H0
                 points = []
+                godpoints = []
+                goddpoints= []
+                dpoints = []
 
 
 
