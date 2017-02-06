@@ -142,7 +142,7 @@ while not done:
                 pos2 = pygame.mouse.get_pos()
                 pos2 = (pos2-np.array((uniWidth/2,uniHeight/2)))/(a(t)/q)+np.array((uniWidth/2,uniHeight/2))
                 lights_traveling = True
-                distance = np.linalg.norm(pos1 - pos2)
+                distance = np.linalg.norm((pos1 - pos2)*a(t)/q)
                 tc = t
                 td = t+100
                 r=0
@@ -245,8 +245,8 @@ while not done:
                     pygame.draw.circle(screen,RED,(int(pos1_tmp[0]),int(pos1_tmp[1])),int(h),0 if int(h)<5 else 5 )
                 if lights_traveling:
                     pos2_tmp = np.array((uniWidth/2,uniHeight/2)) + (pos2-np.array((uniWidth/2,uniHeight/2)))*a(t)/q
-                    pygame.draw.circle(screen,BLUE,(int(pos2_tmp[0]),int(pos2_tmp[1])),int(r/q),0 if int(r/q)<5 else 5 )
-                    distance = np.linalg.norm(pos1_tmp - pos2_tmp)
+                    pygame.draw.circle(screen,YELLOW,(int(pos2_tmp[0]),int(pos2_tmp[1])),int(r/q),0 if int(r/q)<5 else 5 )
+                    distance = np.linalg.norm((pos1 - pos2)*a(t)/q)
                     if horizons:
                         h = event_horizon(tc,t,godmode)
                         pygame.draw.circle(screen,RED,(int(pos2_tmp[0]),int(pos2_tmp[1])),int(h),0 if int(h)<5 else 5 )
