@@ -84,7 +84,8 @@ p_shape  = np.array((400,200),dtype=int)
 p_loc = np.array((uniWidth-(p_shape[0]+50),50),dtype=int)
 xlim = np.array((0,200),dtype=int)
 ylim = np.array((0,105),dtype=int)
-points = [] 
+points = []
+dpoints = []
 ticksize = 10
 axiscolor = CYAN
 plotcolor = GREEN
@@ -126,7 +127,7 @@ pygame.mixer.music.load('keygen_music.mp3')
 pygame.mixer.music.play(loops=-1)
 music = True
 while not done:
-    keys = pygame.key.get_pressed()    
+    keys = pygame.key.get_pressed()
     if keys[pygame.K_RETURN]:
         fast = True
     else:
@@ -145,7 +146,8 @@ while not done:
         else:
             if event.type == pygame.MOUSEBUTTONDOWN:
                 pos1 = pygame.mouse.get_pos()
-                pos1 = (pos1-np.array((uniWidth/2,uniHeight/2)))/(a(t)/q)+np.array((uniWidth/2,uniHeight/2))
+                pos1 = (pos1 - np.array((uniWidth/2,uniHeight/2)))/(a(t)/q)+np.array((uniWidth/2,uniHeight/2))
+                distance = np.linalg.norm(pos1 - pos2)
                 light_traveling = True
                 tc = t
                 td = t+100
@@ -183,7 +185,7 @@ while not done:
                 inflating = True
                 light_traveling = False
                 lights_traveling = False
-                horizons = True 
+                horizons = True
                 num_dt = 0
                 a = lambda t: infla(t)
                 H = lambda t: H0
@@ -202,7 +204,9 @@ while not done:
 
         t = num_dt*dt
         points.append(p_loc + (0,+p_shape[1]) + (t/xlim[1]*p_shape[0], -event_horizon(t,t)/ylim[1]*p_shape[1]))
-
+        dpoints.append(p_loc + (0,+p_shape[1]))
+        if lights_traveling:
+            ditance
         if light_traveling:
             if (tc <= t <= td):
                 v = c + H(t)*r
@@ -234,6 +238,7 @@ while not done:
                 if lights_traveling:
                     pos2_tmp = np.array((uniWidth/2,uniHeight/2)) + (pos2-np.array((uniWidth/2,uniHeight/2)))*a(t)/q
                     pygame.draw.circle(screen,BLUE,(int(pos2_tmp[0]),int(pos2_tmp[1])),int(r/q),0 if int(r/q)<5 else 5 )
+                    distance = np.linalg.norm(pos1_tmp - pos2_tmp)
                     if horizons:
                         h = event_horizon(tc,t)
                         pygame.draw.circle(screen,RED,(int(pos2_tmp[0]),int(pos2_tmp[1])),int(h),0 if int(h)<5 else 5 )
@@ -246,7 +251,7 @@ while not done:
                 draw_plot(screen)
 
 
-            pygame.display.flip() 
+            pygame.display.flip()
             clock.tick(maxfps)
     else:
 
@@ -271,7 +276,7 @@ while not done:
         text = font.render("CLICK    release light beams",True,WHITE)
         text_rect = text.get_rect(left=int(uniWidth/10)-30,top=int(uniHeight/4)+50)
         screen.blit(text,text_rect)
-        
+
         text = font.render("p    display a(t) plot",True,WHITE)
         text_rect = text.get_rect(left=int(uniWidth/10),top=int(uniHeight/4)+100)
         screen.blit(text,text_rect)
@@ -304,7 +309,7 @@ while not done:
         text_rect = text.get_rect(left=int(uniWidth/10)-30,top=int(uniHeight/4)+450)
         screen.blit(text,text_rect)
 
-        pausex += 2 
+        pausex += 2
 
         pygame.display.flip()
         clock.tick(maxfps)
