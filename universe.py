@@ -175,6 +175,7 @@ while not done:
                 horizons = True 
                 num_dt = 0
                 a = lambda t: infla(t)
+                H = lambda t: H0
                 points = []
 
 
