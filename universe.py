@@ -83,7 +83,7 @@ drawing_plot = True
 p_shape  = np.array((400,200),dtype=int)
 p_loc = np.array((uniWidth-(p_shape[0]+50),50),dtype=int)
 xlim = np.array((0,200),dtype=int)
-ylim = np.array((0,105),dtype=int)
+ylim = np.array((0,500),dtype=int)
 points = []
 dpoints = []
 godpoints = []
@@ -128,6 +128,7 @@ fast = False
 godgrid = recompute_grid(t,uniWidth/2,uniHeight/2,1)
 a = lambda t: infla(t)
 H = lambda t: H0
+e = lambda tc,t,godmode: event_horizon(tc,t,godmode)
 inflating = True
 pygame.mixer.init()
 pygame.mixer.music.load('keygen_music.mp3')
@@ -146,7 +147,7 @@ while not done:
                 lights_traveling = True
                 distance = np.linalg.norm((pos1 - pos2))
                 tc = t
-                td = t+100
+                td = t+1000
                 r=0
         else:
             if event.type == pygame.MOUSEBUTTONDOWN:
@@ -154,7 +155,7 @@ while not done:
                 pos1 = (pos1 - np.array((uniWidth/2,uniHeight/2)))/(a(t)/q)+np.array((uniWidth/2,uniHeight/2))
                 light_traveling = True
                 tc = t
-                td = t+100
+                td = t+1000
                 r=0
         if event.type == pygame.KEYDOWN:
             if event.key == pygame.K_q:
@@ -183,6 +184,7 @@ while not done:
                 tswitch = t
                 a = lambda t: infla(tswitch) + rad(t-tswitch)
                 H = lambda t: radH(t)
+                e = lambda tc,t,godmode: 10000
                 horizons = False
             if event.key == pygame.K_r:
                 #reset to the beginning
@@ -210,8 +212,8 @@ while not done:
             num_dt+=1
 
         t = num_dt*dt
-        points.append(   p_loc + (0,+p_shape[1]) + (t/xlim[1]*p_shape[0], -event_horizon(t,t,False)/ylim[1]*p_shape[1]))
-        godpoints.append(p_loc + (0,+p_shape[1]) + (t/xlim[1]*p_shape[0], -event_horizon(t,t,True )/ylim[1]*p_shape[1]))
+        points.append(   p_loc + (0,+p_shape[1]) + (t/xlim[1]*p_shape[0], -e(t,t,False)/ylim[1]*p_shape[1]))
+        godpoints.append(p_loc + (0,+p_shape[1]) + (t/xlim[1]*p_shape[0], -e(t,t,True )/ylim[1]*p_shape[1]))
 
         if lights_traveling:
             dpoints.append(   p_loc + (0,+p_shape[1]) + (t/xlim[1]*p_shape[0], -distance*a(t)/ylim[1]*p_shape[1]))
@@ -243,14 +245,14 @@ while not done:
                 pos1_tmp = np.array((uniWidth/2,uniHeight/2)) + (pos1-np.array((uniWidth/2,uniHeight/2)))*a(t)/q
                 pygame.draw.circle(screen,YELLOW,(int(pos1_tmp[0]),int(pos1_tmp[1])),int(r/q),0 if int(r/q)<5 else 5 )
                 if horizons:
-                    h = event_horizon(tc,t,godmode)
+                    h = e(tc,t,godmode)
                     pygame.draw.circle(screen,RED,(int(pos1_tmp[0]),int(pos1_tmp[1])),int(h),0 if int(h)<5 else 5 )
                 if lights_traveling:
                     pos2_tmp = np.array((uniWidth/2,uniHeight/2)) + (pos2-np.array((uniWidth/2,uniHeight/2)))*a(t)/q
                     pygame.draw.circle(screen,YELLOW,(int(pos2_tmp[0]),int(pos2_tmp[1])),int(r/q),0 if int(r/q)<5 else 5 )
-                    distance = np.linalg.norm((pos1 - pos2)*a(t)/q)
+                    distance = np.linalg.norm((pos1 - pos2))
                     if horizons:
-                        h = event_horizon(tc,t,godmode)
+                        h = e(tc,t,godmode)
                         pygame.draw.circle(screen,RED,(int(pos2_tmp[0]),int(pos2_tmp[1])),int(h),0 if int(h)<5 else 5 )
 
 
