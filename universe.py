@@ -199,6 +199,7 @@ while not done:
                 num_dt = 0
                 a = lambda t: infla(t)
                 H = lambda t: H0
+                e = lambda tc,t,godmode: event_horizon(tc,t,godmode)
                 points = []
                 godpoints = []
                 goddpoints= []
@@ -315,7 +316,7 @@ while not done:
         text_rect = text.get_rect(left=int(uniWidth/10),top=int(uniHeight/4)+300)
         screen.blit(text,text_rect)
 
-        text = font.render("g    GODMODE, become omnipotent",True,WHITE)
+        text = font.render("g    GODMODE, become omniscient",True,WHITE)
         text_rect = text.get_rect(left=int(uniWidth/10),top=int(uniHeight/4)+350)
         screen.blit(text,text_rect)
 
