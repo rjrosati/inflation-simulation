@@ -3,7 +3,7 @@ Have you ever wondered "How far away will my screams reach?"? Well, here is the 
 
 # Download
 (Easiest) To run a pre-compiled version of the game on Mac or Linux, download and unzip 
-[this file]https://github.com/rjrosati/inflation-simulation/releases/download/v0.1/game.zip . Then double-click the file named `runme`.
+this file: https://github.com/rjrosati/inflation-simulation/releases/download/v0.1/game.zip . Then double-click the file named `runme`.
 
 (Run from source)
 To download this script, click on the green "clone or download" button right above the list of files. If you have `git` installed, you can clone the repository, or you can download the current version as a zip file.
