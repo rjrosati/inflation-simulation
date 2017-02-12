@@ -2,17 +2,18 @@
 Have you ever wondered "How far away will my screams reach?"? Well, here is the ultimate answer. It doesn't get any less causally connected than this. Here we introduce INFLATION SIMULATOR 9000. Be it that you started screaming at the beggining of the universe, of rather late (during radiation dominated era) we can tell you how far away they will ever reach!
 
 # Download
-(Easiest) To run a pre-compiled version of the game on Mac or Linux, download and unzip this file. Then double-click the file named `runme`.
-https://github.com/rjrosati/inflation-simulation/releases/download/v0.1/game.zip
+(Easiest) To run a pre-compiled version of the game on Mac or Linux, download and unzip 
+[this file]https://github.com/rjrosati/inflation-simulation/releases/download/v0.1/game.zip . Then double-click the file named `runme`.
 
+(Run from source)
 To download this script, click on the green "clone or download" button right above the list of files. If you have `git` installed, you can clone the repository, or you can download the current version as a zip file.
 
 # Installation
 This script uses the `Python` libraries `numpy` and `pygame`. If you have `Python` installed, but without these libraries, the easiest way to get them is through `pip`. See https://packaging.python.org/installing/#use-pip-for-installing .
 
-If you don't have `Python` installed, we recommend you install the Anaconda distribution, which comes prepackaged with these libraries. https://www.continuum.io/downloads
+If you don't have `Python` installed, we recommend you install the Anaconda distribution (for Python 2), which comes prepackaged with these libraries. https://www.continuum.io/downloads
 
-# Running the script
+# Running the script from source
 On Mac or Linux, open a terminal in the script's folder and type 
 ```bash
 $> python ./universe.py
