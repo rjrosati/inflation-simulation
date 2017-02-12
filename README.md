@@ -2,6 +2,9 @@
 Have you ever wondered "How far away will my screams reach?"? Well, here is the ultimate answer. It doesn't get any less causally connected than this. Here we introduce INFLATION SIMULATOR 9000. Be it that you started screaming at the beggining of the universe, of rather late (during radiation dominated era) we can tell you how far away they will ever reach!
 
 # Download
+(Easiest) To run a pre-compiled version of the game on Mac or Linux, download and unzip this file. Then double-click the file named `runme`.
+https://github.com/rjrosati/inflation-simulation/releases/download/v0.1/game.zip
+
 To download this script, click on the green "clone or download" button right above the list of files. If you have `git` installed, you can clone the repository, or you can download the current version as a zip file.
 
 # Installation
