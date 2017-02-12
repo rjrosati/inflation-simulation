@@ -4,8 +4,10 @@ import sys
 import pygame
 import numpy as np
 import random
+import os
 
-fontpath = "./PressStart2P.ttf" 
+basepath = ".."+os.sep+".."
+fontpath = basepath+os.sep+"PressStart2P.ttf" 
 uniWidth = 900
 uniHeight = 900
 blk = 100
@@ -132,7 +134,7 @@ H = lambda t: H0
 e = lambda tc,t,godmode: event_horizon(tc,t,godmode)
 inflating = True
 pygame.mixer.init()
-pygame.mixer.music.load('keygen_music.mp3')
+pygame.mixer.music.load(basepath+os.sep+'keygen_music.mp3')
 pygame.mixer.music.play(loops=-1)
 music = True
 while not done:
