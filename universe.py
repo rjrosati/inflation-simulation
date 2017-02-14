@@ -6,9 +6,15 @@ import numpy as np
 import random
 import os
 
-basepath = "."
-fontpath = basepath+os.sep+"PressStart2P.ttf" 
-musicpath = basepath+os.sep+'keygen_music.mp3'
+basepath = os.path.dirname(os.path.realpath(__file__))
+fontpath = os.path.join(basepath,"PressStart2P.ttf")
+if not os.path.exists(fontpath):
+    print("Error: font file not found. I looked in " + fontpath)
+    sys.exit(-1)
+musicpath = os.path.join(basepath,'keygen_music.mp3')
+if not os.path.exists(musicpath):
+    print("Error: music file not found. I looked in " + musicpath)
+    sys.exit(-1)
 uniWidth = 900
 uniHeight = 900
 blk = 100
