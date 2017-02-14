@@ -2,8 +2,8 @@
 Have you ever wondered "How far away will my screams reach?"? Well, here is the ultimate answer. It doesn't get any less causally connected than this. Here we introduce INFLATION SIMULATOR 9000. Be it that you started screaming at the beggining of the universe, of rather late (during radiation dominated era) we can tell you how far away they will ever reach!
 
 # Download
-(Easiest) To run a pre-compiled version of the game on Windows or Linux, download and unzip the file from the releases page:
-https://github.com/rjrosati/inflation-simulation/releases/latest . Then double-click the executable.
+(Easiest) To run a pre-compiled version of the game, download and unzip the file for your OS from the releases page:
+https://github.com/rjrosati/inflation-simulation/releases/latest . Then double-click the executable. For Mac and Linux the executable is named `universe`, on Windows it's `universe.exe`.
 
 (Run from source)
 To download this script, click on the green "clone or download" button right above the list of files. If you have `git` installed, you can clone the repository, or you can download the current version as a zip file.
@@ -43,7 +43,9 @@ Switch to GODMODE. Start a light beam. Notice how the light beam will never reac
 - Look at the plots in the two modes: 
 NOTICE THE INTERSECTIONS: Your screams could hardly be heard during inflation but radiation era brings them back to those distant places!!!
 
-Some warnings:
+# Some warnings:
+The units are arbitrary at the moment. A switch to Planck units will be coming in the near future.
+
 We are not solving the full FRW equations here, especially not when switching from inflation to radiation domination.
 If we solved the full equations of motion, we wouldn't be able to stay in inflation arbitrarily long.
 You might notice some irregularites if you end inflation before a(t)=10 or so (like light going backwards).
