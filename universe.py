@@ -6,7 +6,11 @@ import numpy as np
 import random
 import os
 
-basepath = sys.path[0]
+if getattr(sys,'frozen',False):
+    basepath = os.path.dirname(sys.executable)
+else:
+    basepath = os.path.dirname(os.path.abspath(__file__))
+
 fontpath = os.path.join(basepath,"PressStart2P.ttf")
 if not os.path.exists(fontpath):
     print("Error: font file not found. I looked in " + fontpath)
