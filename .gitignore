@@ -1,6 +1,10 @@
 # .swp
 *.swp
 
+# compiled files
+game.zip
+universe
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
