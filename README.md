@@ -5,15 +5,15 @@ Have you ever wondered "How far away will my screams reach?"? Well, here is the 
 (Easiest) To run a pre-compiled version of the game, download and unzip the file for your OS from the releases page:
 https://github.com/rjrosati/inflation-simulation/releases/latest . Then double-click the executable. For Mac and Linux the executable is named `universe`, on Windows it's `universe.exe`.
 
-(Run from source)
+# To run from source
 To download this script, click on the green "clone or download" button right above the list of files. If you have `git` installed, you can clone the repository, or you can download the current version as a zip file.
 
-# Installation
+## Installation
 If you don't have `Python` installed, we recommend you install the Anaconda distribution (for Python 3), which comes packaged with `numpy`. https://www.continuum.io/downloads
 
 You'll then need to run `pip install pygame`.
 
-# Running the script
+## Running the script
 On Mac or Linux, open a terminal in the script's folder and type 
 ```bash
 $> python ./universe.py
