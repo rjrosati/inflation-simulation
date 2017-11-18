@@ -53,6 +53,7 @@ BLACK = (  0,  0,  0)
 q=1
 
 colors = [WHITE,RED,GREEN,BLUE,YELLOW,CYAN,MAGENTA,BLACK]
+bkcolors = [RED,GREEN,BLUE,CYAN,MAGENTA,BLACK]
 
 H0 = 1E-1
 def infla(t):
@@ -143,7 +144,8 @@ def draw_plot(screen):
     if len(p)>1:
         pygame.draw.lines(screen, plotcolor, False, p, 3)
         if ((p[-1][0] > p_loc[0] + p_shape[0]) or (p[-1][1] < p_loc[1])):
-            blit_txt_with_outline(screen,(250,850),font,"INFLATION IS OFF THE CHARTS!!",WHITE,BLACK,3)
+            pygame.draw.rect(screen, BLACK,(230,830,610,50))
+            blit_txt_with_outline(screen,(250,850),font,"INFLATION IS OFF THE CHARTS!!",WHITE,BLACK,10)
 
     if len(d)>1:
         pygame.draw.lines(screen, dplotcolor, False, d, 3)
@@ -153,6 +155,7 @@ def draw_plot(screen):
 fast = False
 godgrid = recompute_grid(t,uniWidth/2,uniHeight/2,1)
 godcheck = recompute_check(t,uniWidth/2,uniHeight/2,1)
+checkcolors = [ random.choice(bkcolors) for i in range(len(godcheck))]
 a = lambda t: infla(t)
 H = lambda t: H0
 e = lambda tc,t,godmode: event_horizon(tc,t,godmode)
@@ -209,9 +212,9 @@ while not done:
                 # let's end inflation, switch a(t) to a different function
                 inflating = False
                 tswitch = t
-                a = lambda t: infla(tswitch) + (1-np.exp((tswitch-t)/tswitch))*rad(t-tswitch)
+                a = lambda t: infla(tswitch) + rad(t-tswitch)
                 H = lambda t: radH(t)
-                e = lambda tc,t,godmode: min(10000,np.exp((tswitch-t)/tswitch)*event_horizon(tc,t,godmode))
+                e = lambda tc,t,godmode: min(10000,np.exp(t-tswitch)*event_horizon(tc,tswitch,godmode))
                 #horizons = False
             if event.key == pygame.K_r:
                 #reset to the beginning
@@ -271,10 +274,10 @@ while not done:
                 grid = recompute_grid(t,uniWidth/2,uniHeight/2,a(t))
                 check = recompute_check(t,uniWidth/2,uniHeight/2,a(t))
 
-            for square in grid:
-                pygame.draw.rect(screen,WHITE,square,1)
-            for square in check:
-                pygame.draw.rect(screen,random.choice(colors),square,1)
+            for square,color in zip(check,checkcolors):
+                pygame.draw.rect(screen,color,square)
+            #for square in grid:
+            #    pygame.draw.rect(screen,WHITE,square,1)
 
             if light_traveling:
                 pos1_tmp = np.array((uniWidth/2,uniHeight/2)) + (pos1-np.array((uniWidth/2,uniHeight/2)))*a(t)/q
