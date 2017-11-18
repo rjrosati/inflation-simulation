@@ -32,6 +32,7 @@ dt = 0.01
 dt_per_frame = 1
 c=10
 num_dt=0
+pulse_t = 2
 t=0
 pausex=0
 done=False
@@ -40,7 +41,7 @@ godmode=False
 light_traveling=False
 lights_traveling=False
 horizons=True
-music = False 
+music = False
 WHITE = (255,255,255)
 RED   = (255,  0,  0)
 GREEN = (  0,255,  0)
@@ -83,6 +84,17 @@ def recompute_grid(t,center_x,center_y,a1):
             grid.append(pygame.Rect(a1*(x-center_x)+center_x,a1*(y-center_y)+center_y,a1*b,a1*b))
     return grid
 
+def recompute_check(t,center_x,center_y,a1):
+    # create a square grid, comoving
+    grid = []
+    w,h,b = uniWidth,uniHeight,blk
+    ws,hs = 0,0
+    #don't rescale grid when no longer visible
+    for x in range(ws,w,b):
+        for y in range(hs,h,b):
+            grid.append(pygame.Rect(a1*(x-center_x)+center_x,a1*(y-center_y)+center_y,a1*b,a1*b))
+    return grid
+
 def blit_txt_with_outline(screen, loc, font, text, fg_color, bg_color,thk):
         textfg = font.render(text,True, fg_color)
         textbg = font.render(text,True, bg_color)
@@ -104,8 +116,8 @@ godpoints = []
 goddpoints = []
 ticksize = 10
 axiscolor = CYAN
-plotcolor = GREEN
-dplotcolor = RED
+plotcolor = RED
+dplotcolor = WHITE
 ylabel = "c.h."
 xlabel = "t"
 def draw_plot(screen):
@@ -140,6 +152,7 @@ def draw_plot(screen):
 
 fast = False
 godgrid = recompute_grid(t,uniWidth/2,uniHeight/2,1)
+godcheck = recompute_check(t,uniWidth/2,uniHeight/2,1)
 a = lambda t: infla(t)
 H = lambda t: H0
 e = lambda tc,t,godmode: event_horizon(tc,t,godmode)
@@ -161,7 +174,7 @@ while not done:
                 lights_traveling = True
                 distance = np.linalg.norm((pos1 - pos2))
                 tc = t
-                td = t+1000
+                td = t+pulse_t
                 r=0
         else:
             if event.type == pygame.MOUSEBUTTONDOWN:
@@ -169,7 +182,7 @@ while not done:
                 pos1 = (pos1 - np.array((uniWidth/2,uniHeight/2)))/(a(t)/q)+np.array((uniWidth/2,uniHeight/2))
                 light_traveling = True
                 tc = t
-                td = t+1000
+                td = t+pulse_t
                 r=0
         if event.type == pygame.KEYDOWN:
             if event.key == pygame.K_q:
@@ -242,19 +255,26 @@ while not done:
                 else:
                     r += v*dt
             else:
-                light_traveling = False
+                tc = t
+                td = t+pulse_t
+                r=0
+                #light_traveling = False
 
         if (num_dt%dt_per_frame==0):
             screen.fill(BLACK)
             if godmode:
                 q = a(t)
                 grid = godgrid
+                check = godcheck
             else:
                 q = 1
                 grid = recompute_grid(t,uniWidth/2,uniHeight/2,a(t))
+                check = recompute_check(t,uniWidth/2,uniHeight/2,a(t))
 
             for square in grid:
                 pygame.draw.rect(screen,WHITE,square,1)
+            for square in check:
+                pygame.draw.rect(screen,random.choice(colors),square,1)
 
             if light_traveling:
                 pos1_tmp = np.array((uniWidth/2,uniHeight/2)) + (pos1-np.array((uniWidth/2,uniHeight/2)))*a(t)/q
