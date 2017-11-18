@@ -178,7 +178,7 @@ while not done:
                 drawing_plot = not drawing_plot
             if event.key == pygame.K_SPACE:
                 paused = not paused
-                pauset=0
+                pauset = 0
             if event.key == pygame.K_g:
                 godmode = not godmode
             if event.type == pygame.KEYDOWN and event.key == pygame.K_m:
@@ -196,10 +196,10 @@ while not done:
                 # let's end inflation, switch a(t) to a different function
                 inflating = False
                 tswitch = t
-                a = lambda t: infla(tswitch) + rad(t-tswitch)
+                a = lambda t: infla(tswitch) + (1-np.exp((tswitch-t)/tswitch))*rad(t-tswitch)
                 H = lambda t: radH(t)
-                e = lambda tc,t,godmode: 10000
-                horizons = False
+                e = lambda tc,t,godmode: min(10000,np.exp((tswitch-t)/tswitch)*event_horizon(tc,t,godmode))
+                #horizons = False
             if event.key == pygame.K_r:
                 #reset to the beginning
                 inflating = True

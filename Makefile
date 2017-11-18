@@ -5,4 +5,4 @@ all:
 .PHONY: clean
 
 clean:
-	rm -rf ./build ./universe ./dist ./runme ./__pycache__ ./*.zip ./*.spec
+	rm -rf ./build ./universe ./dist ./__pycache__ ./*.zip ./*.spec
