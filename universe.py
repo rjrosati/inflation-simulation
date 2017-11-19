@@ -19,8 +19,12 @@ musicpath = os.path.join(basepath,'keygen_music.mp3')
 if not os.path.exists(musicpath):
     print("Error: music file not found. I looked in " + musicpath)
     sys.exit(-1)
-uniWidth = 1280
-uniHeight = 720
+laserpath = os.path.join(basepath,'laser.mp3')
+if not os.path.exists(laserpath):
+    print("Error: laser sound effect file not found. I looked in " + laserpath)
+    sys.exit(-1)
+uniWidth = 900
+uniHeight = 900
 blk = 50
 pygame.init()
 screen = pygame.display.set_mode((uniWidth,uniHeight), pygame.FULLSCREEN)
@@ -28,11 +32,11 @@ clock = pygame.time.Clock()
 maxfps=60
 font = pygame.font.Font(fontpath,20)
 bigfont = pygame.font.Font(fontpath,30)
-dt = 0.01
+dti = dt = 0.01
 dt_per_frame = 1
 c=10
 num_dt=0
-pulse_t = 10
+pulse_t = 4
 t=0
 pausex=0
 done=False
@@ -154,6 +158,7 @@ def draw_plot(screen):
     return
 
 fast = False
+slow = False
 godgrid = recompute_grid(t,uniWidth/2,uniHeight/2,1)
 godcheck = recompute_check(t,uniWidth/2,uniHeight/2,1)
 checkcolors = [ random.choice(bkcolors) for i in range(len(godcheck))]
@@ -195,9 +200,10 @@ while not done:
                 drawing_plot = not drawing_plot
             if event.key == pygame.K_SPACE:
                 paused = not paused
-                pauset = 0
             if event.key == pygame.K_g:
                 godmode = not godmode
+            if event.key == pygame.K_n:
+                slow = not slow
             if event.type == pygame.KEYDOWN and event.key == pygame.K_m:
                 if not music:
                     pygame.mixer.init()
@@ -240,6 +246,8 @@ while not done:
     if not paused:
         if fast:
             num_dt+=10
+        elif slow:
+            num_dt+=0.1
         else:
             num_dt+=1
 
