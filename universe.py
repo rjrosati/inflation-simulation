@@ -108,6 +108,10 @@ def blit_txt_with_outline(screen, loc, font, text, fg_color, bg_color,thk):
         screen.blit(textbg,loc+( thk,-thk))
         screen.blit(textbg,loc+(-thk, thk))
         screen.blit(textbg,loc+( thk, thk))
+        screen.blit(textbg,loc+(   0,-thk))
+        screen.blit(textbg,loc+(   0, thk))
+        screen.blit(textbg,loc+(-thk,   0))
+        screen.blit(textbg,loc+( thk,   0))
         screen.blit(textfg,loc)
         return
 
@@ -308,8 +312,8 @@ while not done:
                         pygame.draw.circle(screen,RED,(int(pos2_tmp[0]),int(pos2_tmp[1])),int(h),0 if int(h)<5 else 5 )
 
 
-            blit_txt_with_outline(screen,(20,20),font,"t = %6.4f"%t,WHITE,BLACK,3)
-            blit_txt_with_outline(screen,(20,50),font,"a(t) = %3.2f"% a(t),WHITE,BLACK,3)
+            blit_txt_with_outline(screen,(20,20),font,"t = %6.4f"%t,WHITE,BLACK,10)
+            blit_txt_with_outline(screen,(20,50),font,"a(t) = %3.2f"% a(t),WHITE,BLACK,10)
 
             if drawing_plot:
                 draw_plot(screen)
