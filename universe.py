@@ -40,7 +40,7 @@ paused=True
 godmode=False
 light_traveling=False
 lights_traveling=False
-horizons=True
+horizons=False
 music = False
 WHITE = (255,255,255)
 RED   = (255,  0,  0)
@@ -177,7 +177,7 @@ while not done:
                 lights_traveling = True
                 distance = np.linalg.norm((pos1 - pos2))
                 tc = t
-                td = t+pulse_t
+                td = t+100
                 r=0
         else:
             if event.type == pygame.MOUSEBUTTONDOWN:
@@ -185,7 +185,7 @@ while not done:
                 pos1 = (pos1 - np.array((uniWidth/2,uniHeight/2)))/(a(t)/q)+np.array((uniWidth/2,uniHeight/2))
                 light_traveling = True
                 tc = t
-                td = t+pulse_t
+                td = t+100
                 r=0
         if event.type == pygame.KEYDOWN:
             if event.key == pygame.K_q:
@@ -252,15 +252,18 @@ while not done:
 
         if light_traveling:
             if (tc <= t <= td):
-                v = c + H(t)*r
-                if fast:
-                    r+= v*10*dt
-                else:
-                    r += v*dt
+                if (t-tc) % pulse_t == 0:
+                    rs.append(0)
+                for i in range(len(rs)):
+                    v = c + H(t)*rs[i]
+                    if fast:
+                        rs[i] += v*10*dt
+                    else:
+                        rs[i] += v*dt
             else:
                 tc = t
                 td = t+100
-                r=0
+                rs = [0]
                 #light_traveling = False
 
         if (num_dt%dt_per_frame==0):
@@ -281,13 +284,15 @@ while not done:
 
             if light_traveling:
                 pos1_tmp = np.array((uniWidth/2,uniHeight/2)) + (pos1-np.array((uniWidth/2,uniHeight/2)))*a(t)/q
-                pygame.draw.circle(screen,YELLOW,(int(pos1_tmp[0]),int(pos1_tmp[1])),int(r/q),0 if int(r/q)<5 else 5 )
+                for r in rs:
+                    pygame.draw.circle(screen,YELLOW,(int(pos1_tmp[0]),int(pos1_tmp[1])),int(r/q),0 if int(r/q)<5 else 5 )
                 if horizons:
                     h = e(tc,t,godmode)
                     pygame.draw.circle(screen,RED,(int(pos1_tmp[0]),int(pos1_tmp[1])),int(h),0 if int(h)<5 else 5 )
                 if lights_traveling:
                     pos2_tmp = np.array((uniWidth/2,uniHeight/2)) + (pos2-np.array((uniWidth/2,uniHeight/2)))*a(t)/q
-                    pygame.draw.circle(screen,YELLOW,(int(pos2_tmp[0]),int(pos2_tmp[1])),int(r/q),0 if int(r/q)<5 else 5 )
+                    for r in rs:
+                        pygame.draw.circle(screen,YELLOW,(int(pos2_tmp[0]),int(pos2_tmp[1])),int(r/q),0 if int(r/q)<5 else 5 )
                     distance = np.linalg.norm((pos1 - pos2))
                     if horizons:
                         h = e(tc,t,godmode)
