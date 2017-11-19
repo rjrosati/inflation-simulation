@@ -25,15 +25,16 @@ if not os.path.exists(laserpath):
     sys.exit(-1)
 uniWidth = 900
 uniHeight = 900
-blk = 50
+blk = 100
 pygame.init()
 screen = pygame.display.set_mode((uniWidth,uniHeight), pygame.FULLSCREEN)
 clock = pygame.time.Clock()
 maxfps=60
 font = pygame.font.Font(fontpath,20)
 bigfont = pygame.font.Font(fontpath,30)
-dti = dt = 0.01
-dt_per_frame = 1
+dt = 0.01
+dti_per_frame = dt_per_frame = 1
+circle_width = 1
 c=10
 num_dt=0
 pulse_t = 4
@@ -54,11 +55,14 @@ YELLOW= (255,255,  0)
 CYAN  = (  0,255,255)
 MAGENTA=(255,  0,255)
 BLACK = (  0,  0,  0)
+DARKBLUE = (61,116,181)
+DARKRED  = (175,69,79 )
+DARKGREEN= (103,131,93)
 q=1
 rs = []
 
 colors = [WHITE,RED,GREEN,BLUE,YELLOW,CYAN,MAGENTA,BLACK]
-bkcolors = [RED,GREEN,BLUE,CYAN,MAGENTA,BLACK]
+bkcolors = [DARKRED,DARKGREEN,DARKBLUE,BLACK]
 
 H0 = 1E-1
 def infla(t):
@@ -188,7 +192,7 @@ while not done:
                 lights_traveling = True
                 distance = np.linalg.norm((pos1 - pos2))
                 tc = t
-                td = t+100
+                td = t+1000
                 rs=[0]
         else:
             if event.type == pygame.MOUSEBUTTONDOWN:
@@ -196,7 +200,7 @@ while not done:
                 pos1 = (pos1 - np.array((uniWidth/2,uniHeight/2)))/(a(t)/q)+np.array((uniWidth/2,uniHeight/2))
                 light_traveling = True
                 tc = t
-                td = t+100
+                td = t+1000
                 rs = [0]
         if event.type == pygame.KEYDOWN:
             if event.key == pygame.K_q:
@@ -252,11 +256,10 @@ while not done:
 
     if not paused:
         if fast:
-            num_dt+=10
-        elif slow:
-            num_dt+=0.1
+            dt_per_frame = dti_per_frame*10
         else:
-            num_dt+=1
+            dt_per_frame = dti_per_frame
+        num_dt+=1
 
         t = num_dt*dt
         points.append(   p_loc + (0,+p_shape[1]) + (t/xlim[1]*p_shape[0], -e(t,t,False)/ylim[1]*p_shape[1]))
@@ -268,14 +271,11 @@ while not done:
 
         if light_traveling:
             if (tc <= t <= td):
-                if (t-tc) % pulse_t == 0:
+                if np.allclose((t-tc) % pulse_t,0):
                     rs.append(0)
                 for i in range(len(rs)):
                     v = c + H(t)*rs[i]
-                    if fast:
-                        rs[i] += v*10*dt
-                    else:
-                        rs[i] += v*dt
+                    rs[i] += v*dt
             else:
                 tc = t
                 td = t+100
@@ -301,18 +301,18 @@ while not done:
             if light_traveling:
                 pos1_tmp = np.array((uniWidth/2,uniHeight/2)) + (pos1-np.array((uniWidth/2,uniHeight/2)))*a(t)/q
                 for r in rs:
-                    pygame.draw.circle(screen,YELLOW,(int(pos1_tmp[0]),int(pos1_tmp[1])),int(r/q),0 if int(r/q)<5 else 5 )
+                    pygame.draw.circle(screen,YELLOW,(int(pos1_tmp[0]),int(pos1_tmp[1])),int(r/q),0 if int(r/q)<5 else circle_width )
                 if horizons:
                     h = e(tc,t,godmode)
-                    pygame.draw.circle(screen,RED,(int(pos1_tmp[0]),int(pos1_tmp[1])),int(h),0 if int(h)<5 else 5 )
+                    pygame.draw.circle(screen,RED,(int(pos1_tmp[0]),int(pos1_tmp[1])),int(h),0 if int(h)<5 else circle_width )
                 if lights_traveling:
                     pos2_tmp = np.array((uniWidth/2,uniHeight/2)) + (pos2-np.array((uniWidth/2,uniHeight/2)))*a(t)/q
                     for r in rs:
-                        pygame.draw.circle(screen,YELLOW,(int(pos2_tmp[0]),int(pos2_tmp[1])),int(r/q),0 if int(r/q)<5 else 5 )
+                        pygame.draw.circle(screen,YELLOW,(int(pos2_tmp[0]),int(pos2_tmp[1])),int(r/q),0 if int(r/q)<5 else circle_width )
                     distance = np.linalg.norm((pos1 - pos2))
                     if horizons:
                         h = e(tc,t,godmode)
-                        pygame.draw.circle(screen,RED,(int(pos2_tmp[0]),int(pos2_tmp[1])),int(h),0 if int(h)<5 else 5 )
+                        pygame.draw.circle(screen,RED,(int(pos2_tmp[0]),int(pos2_tmp[1])),int(h),0 if int(h)<5 else circle_width )
 
 
             blit_txt_with_outline(screen,(20,20),font,"t = %6.4f"%t,WHITE,BLACK,10)
