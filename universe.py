@@ -19,8 +19,8 @@ musicpath = os.path.join(basepath,'keygen_music.mp3')
 if not os.path.exists(musicpath):
     print("Error: music file not found. I looked in " + musicpath)
     sys.exit(-1)
-uniWidth = 900
-uniHeight = 900
+uniWidth = 700
+uniHeight = 700
 blk = 100
 pygame.init()
 screen = pygame.display.set_mode((uniWidth,uniHeight), pygame.FULLSCREEN)
@@ -259,7 +259,7 @@ while not done:
                     r += v*dt
             else:
                 tc = t
-                td = t+pulse_t
+                td = t+100
                 r=0
                 #light_traveling = False
 
