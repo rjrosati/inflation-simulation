@@ -19,7 +19,7 @@ musicpath = os.path.join(basepath,'keygen_music.mp3')
 if not os.path.exists(musicpath):
     print("Error: music file not found. I looked in " + musicpath)
     sys.exit(-1)
-laserpath = os.path.join(basepath,'laser.mp3')
+laserpath = os.path.join(basepath,'laser.aiff')
 if not os.path.exists(laserpath):
     print("Error: laser sound effect file not found. I looked in " + laserpath)
     sys.exit(-1)
@@ -173,6 +173,7 @@ inflating = True
 pygame.mixer.init()
 pygame.mixer.music.load(musicpath)
 pygame.mixer.music.play(loops=-1)
+pewpew = pygame.mixer.Sound(laserpath)
 music = True
 while not done:
     keys = pygame.key.get_pressed()
@@ -204,6 +205,8 @@ while not done:
                 drawing_plot = not drawing_plot
             if event.key == pygame.K_SPACE:
                 paused = not paused
+                if not paused:
+                    pewpew.play()
             if event.key == pygame.K_g:
                 godmode = not godmode
             if event.key == pygame.K_n:
