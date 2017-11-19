@@ -51,6 +51,7 @@ CYAN  = (  0,255,255)
 MAGENTA=(255,  0,255)
 BLACK = (  0,  0,  0)
 q=1
+rs = []
 
 colors = [WHITE,RED,GREEN,BLUE,YELLOW,CYAN,MAGENTA,BLACK]
 bkcolors = [RED,GREEN,BLUE,CYAN,MAGENTA,BLACK]
@@ -178,7 +179,7 @@ while not done:
                 distance = np.linalg.norm((pos1 - pos2))
                 tc = t
                 td = t+100
-                r=0
+                rs=[0]
         else:
             if event.type == pygame.MOUSEBUTTONDOWN:
                 pos1 = pygame.mouse.get_pos()
@@ -186,7 +187,7 @@ while not done:
                 light_traveling = True
                 tc = t
                 td = t+100
-                r=0
+                rs = [0]
         if event.type == pygame.KEYDOWN:
             if event.key == pygame.K_q:
                 done=True
