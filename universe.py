@@ -19,9 +19,9 @@ musicpath = os.path.join(basepath,'keygen_music.mp3')
 if not os.path.exists(musicpath):
     print("Error: music file not found. I looked in " + musicpath)
     sys.exit(-1)
-uniWidth = 700
-uniHeight = 700
-blk = 100
+uniWidth = 1280
+uniHeight = 720
+blk = 50
 pygame.init()
 screen = pygame.display.set_mode((uniWidth,uniHeight), pygame.FULLSCREEN)
 clock = pygame.time.Clock()
