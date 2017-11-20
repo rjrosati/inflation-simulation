@@ -34,7 +34,7 @@ font = pygame.font.Font(fontpath,20)
 bigfont = pygame.font.Font(fontpath,30)
 dt = 0.01
 dti_per_frame = dt_per_frame = 1
-circle_width = 1
+circle_width = 2
 c=10
 num_dt=0
 pulse_t = 4
