@@ -94,3 +94,7 @@ ENV/
 
 # Rope project settings
 .ropeproject
+
+./universe
+./universe.exe
+._*
