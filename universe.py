@@ -23,6 +23,8 @@ laserpath = os.path.join(basepath, "laser.aiff")
 if not os.path.exists(laserpath):
     print("Error: laser sound effect file not found. I looked in " + laserpath)
     sys.exit(-1)
+rs = []
+
 uniWidth = 900
 uniHeight = 900
 blk = 100
@@ -39,14 +41,8 @@ c = 10
 num_dt = 0
 pulse_t = 4
 t = 0
+a0 = 1
 pausex = 0
-done = False
-paused = True
-godmode = False
-light_traveling = False
-lights_traveling = False
-horizons = False
-music = False
 WHITE     = (255, 255, 255)
 RED       = (255, 0, 0)
 GREEN     = (0,   255, 0)
@@ -59,39 +55,16 @@ DARKBLUE  = (61,  116, 181)
 DARKRED   = (175, 69, 79)
 DARKGREEN = (103, 131, 93)
 q = 1
-rs = []
+FASTFACTOR = 5
 
 colors = [WHITE, RED, GREEN, BLUE, YELLOW, CYAN, MAGENTA, BLACK]
 bkcolors = [DARKRED, DARKGREEN, DARKBLUE, BLACK]
 
-H0 = 1e-1
-
-
-def infla(t):
-    return np.exp(H0 * t)
-
-
-def rad(t):
-    return (2 * H0 * t) ** 0.5  # (should this be / 2 ?)
-
-
-def radH(t):
-    return H0 * a(t) ** (-2)
-
-
-def event_horizon(tc, t, godmode):
-    if godmode:
-        return c / H0 * np.exp(-H0 * tc)
-    else:
-        return a(t) * c / H0 * np.exp(-H0 * tc)
-
-
-def max_causal_horizon(t, godmode):
-    if godmode:
-        return c / H
-    else:
-        return c / H * a(t)
-
+H0 = 1e-4
+# in general, goes like a**(-3*(w+1))
+# also, epsilon is 3/2(1+w), or __ w = 2e/3 - 1 __
+def const_w_EOS(a,w):
+    return a**(-3*(w+1))
 
 def recompute_grid(t, center_x, center_y, a1):
     # create a square grid, comoving
@@ -218,14 +191,23 @@ def draw_plot(screen):
     return
 
 
+done = False
+paused = True
+godmode = False
+light_traveling = False
+lights_traveling = False
+horizons = False
+music = False
 fast = False
 slow = False
 godgrid = recompute_grid(t, uniWidth / 2, uniHeight / 2, 1)
 godcheck = recompute_check(t, uniWidth / 2, uniHeight / 2, 1)
 checkcolors = [random.choice(bkcolors) for i in range(len(godcheck))]
-a = lambda t: infla(t)
-H = lambda t: H0
-e = lambda tc, t, godmode: event_horizon(tc, t, godmode)
+at = []
+a = a0
+H = H0
+eh = 0
+tswitch = np.inf
 inflating = True
 pygame.mixer.init()
 pygame.mixer.music.load(musicpath)
@@ -242,7 +224,7 @@ while not done:
             if event.type == pygame.MOUSEBUTTONDOWN:
                 pos2 = pygame.mouse.get_pos()
                 pos2 = (pos2 - np.array((uniWidth / 2, uniHeight / 2))) / (
-                    a(t) / q
+                    a / q
                 ) + np.array((uniWidth / 2, uniHeight / 2))
                 lights_traveling = True
                 distance = np.linalg.norm((pos1 - pos2))
@@ -253,7 +235,7 @@ while not done:
             if event.type == pygame.MOUSEBUTTONDOWN:
                 pos1 = pygame.mouse.get_pos()
                 pos1 = (pos1 - np.array((uniWidth / 2, uniHeight / 2))) / (
-                    a(t) / q
+                    a / q
                 ) + np.array((uniWidth / 2, uniHeight / 2))
                 light_traveling = True
                 tc = t
@@ -285,13 +267,16 @@ while not done:
                 horizons = not horizons
             if event.key == pygame.K_e and inflating:
                 # let's end inflation, switch a(t) to a different function
+                # TODO instead, we should solve this as an ode. but how if we don't know tswitch?? hmmm
+                # probably just make the transition fast, use a(t,tswitch=inf) until keypress, then jump to a(t,tswitch=tkeypress+3s)
+                # where we choose the time to minimize the discontinuity
                 inflating = False
                 tswitch = t
-                a = lambda t: infla(tswitch) + rad(t - tswitch)
-                H = lambda t: radH(t)
-                e = lambda tc, t, godmode: min(
-                    10000, np.exp(t - tswitch) * event_horizon(tc, tswitch, godmode)
-                )
+                #a = lambda t: infla(tswitch) + rad(t - tswitch)
+                #H = lambda t: radH(t)
+                #e = lambda tc, t, godmode: min(
+                #    10000, np.exp(t - tswitch) * event_horizon(tc, tswitch, godmode)
+                #)
                 # horizons = False
             if event.key == pygame.K_r:
                 # reset to the beginning
@@ -300,38 +285,62 @@ while not done:
                 lights_traveling = False
                 horizons = True
                 num_dt = 0
-                a = lambda t: infla(t)
-                H = lambda t: H0
-                e = lambda tc, t, godmode: event_horizon(tc, t, godmode)
+                eh = 0
+                a = a0
+                H = H0
+                tswitch = np.inf
                 points = []
                 godpoints = []
                 goddpoints = []
                 dpoints = []
+                at = []
 
     if not paused:
         if fast:
-            dt_per_frame = dti_per_frame * 10
+            dt_per_frame = dti_per_frame * FASTFACTOR
         else:
             dt_per_frame = dti_per_frame
         num_dt += 1
 
         t = num_dt * dt
+        OmegaR=0
+        OmegaL=1
+        eps = 3.0*np.tanh(t-(tswitch+3.0))/2.0
+        H = H0 * np.sqrt(OmegaR*const_w_EOS(a,1./3.) + OmegaL*const_w_EOS(a,2*eps/3-1))
+        da = H*a*dti_per_frame
+        a += da
+        
+        # event horizon
+        # d_event_horizon = a(t)* int_0^t0 c/a(t) dt
+        deh = c / a * dti_per_frame
+        eh += deh
+
+        if fast:
+            for _ in range(FASTFACTOR-1):
+                H = H0 * np.sqrt(OmegaR*const_w_EOS(a,1./3.) + OmegaL*const_w_EOS(a,2*eps/3-1))
+                da = H*a*dti_per_frame
+                a += da
+
+                deh = c / a * dti_per_frame
+                eh += deh
+        at.append(a)
+        
         points.append(
             p_loc
             + (0, +p_shape[1])
-            + (t / xlim[1] * p_shape[0], -e(t, t, False) / ylim[1] * p_shape[1])
+            + (t / xlim[1] * p_shape[0], -eh / ylim[1] * p_shape[1])
         )
         godpoints.append(
             p_loc
             + (0, +p_shape[1])
-            + (t / xlim[1] * p_shape[0], -e(t, t, True) / ylim[1] * p_shape[1])
+            + (t / xlim[1] * p_shape[0], -a*eh / ylim[1] * p_shape[1])
         )
 
         if lights_traveling:
             dpoints.append(
                 p_loc
                 + (0, +p_shape[1])
-                + (t / xlim[1] * p_shape[0], -distance * a(t) / ylim[1] * p_shape[1])
+                + (t / xlim[1] * p_shape[0], -distance * a / ylim[1] * p_shape[1])
             )
             goddpoints.append(
                 p_loc
@@ -344,7 +353,7 @@ while not done:
                 if np.allclose((t - tc) % pulse_t, 0):
                     rs.append(0)
                 for i in range(len(rs)):
-                    v = c + H(t) * rs[i]
+                    v = c + H * rs[i]
                     rs[i] += v * dt
             else:
                 tc = t
@@ -355,23 +364,21 @@ while not done:
         if num_dt % dt_per_frame == 0:
             screen.fill(BLACK)
             if godmode:
-                q = a(t)
+                q = a
                 grid = godgrid
                 check = godcheck
             else:
                 q = 1
-                grid = recompute_grid(t, uniWidth / 2, uniHeight / 2, a(t))
-                check = recompute_check(t, uniWidth / 2, uniHeight / 2, a(t))
+                grid = recompute_grid(t, uniWidth / 2, uniHeight / 2, a)
+                check = recompute_check(t, uniWidth / 2, uniHeight / 2, a)
 
             for square, color in zip(check, checkcolors):
                 pygame.draw.rect(screen, color, square)
-            # for square in grid:
-            #    pygame.draw.rect(screen,WHITE,square,1)
 
             if light_traveling:
                 pos1_tmp = (
                     np.array((uniWidth / 2, uniHeight / 2))
-                    + (pos1 - np.array((uniWidth / 2, uniHeight / 2))) * a(t) / q
+                    + (pos1 - np.array((uniWidth / 2, uniHeight / 2))) * a / q
                 )
                 for r in rs:
                     pygame.draw.circle(
@@ -393,7 +400,7 @@ while not done:
                 if lights_traveling:
                     pos2_tmp = (
                         np.array((uniWidth / 2, uniHeight / 2))
-                        + (pos2 - np.array((uniWidth / 2, uniHeight / 2))) * a(t) / q
+                        + (pos2 - np.array((uniWidth / 2, uniHeight / 2))) * a / q
                     )
                     for r in rs:
                         pygame.draw.circle(
@@ -418,7 +425,7 @@ while not done:
                 screen, (20, 20), font, "t = %6.4f" % t, WHITE, BLACK, 10
             )
             blit_txt_with_outline(
-                screen, (20, 50), font, "a(t) = %3.2f" % a(t), WHITE, BLACK, 10
+                screen, (20, 50), font, "a(t) = %3.2f" % a, WHITE, BLACK, 10
             )
 
             if drawing_plot:
